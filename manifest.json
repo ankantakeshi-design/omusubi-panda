@@ -1,0 +1,22 @@
+{
+  "name": "omupan🍙🐼",
+  "short_name": "omupan🍙🐼",
+  "description": "地球の食べ物にハマっちゃった宇宙人🛸🌍",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fffaf0",
+  "theme_color": "#7aaa5a",
+  "icons": [
+    {
+      "src": "op192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "op512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
