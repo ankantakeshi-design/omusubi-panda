@@ -1,0 +1,1160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>おむすびぱんだ 🍙🐼</title>
+
+<!-- OGP -->
+<meta property="og:title" content="おむすびぱんだ🍙🐼">
+<meta property="og:description" content="地球の食べ物にハマっちゃった宇宙人🛸🌍 ぱんだの姿に似てるけどちょっとおにぎり🍙🐼">
+<meta property="og:image" content="https://omusubi-panda.pages.dev/ogp.png">
+<meta property="og:url" content="https://omusubi-panda.pages.dev/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="おむすびぱんだ">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="おむすびぱんだ🍙🐼">
+<meta name="twitter:description" content="地球の食べ物にハマっちゃった宇宙人🛸🌍 ぱんだの姿に似てるけどちょっとおにぎり🍙🐼">
+<meta name="twitter:image" content="https://omusubi-panda.pages.dev/ogp.png">
+
+<!-- Favicon & Icons -->
+<link rel="icon" type="image/png" sizes="512x512" href="op512.png">
+<link rel="icon" type="image/png" sizes="192x192" href="op192.png">
+<link rel="apple-touch-icon" sizes="180x180" href="op180.png">
+
+<!-- Web App Manifest -->
+<link rel="manifest" href="manifest.json">
+<meta name="apple-mobile-web-app-title" content="omupan🍙🐼">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="application-name" content="omupan🍙🐼">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-D9XG1FT43S"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-D9XG1FT43S');
+</script>
+<link href="https://fonts.googleapis.com/css2?family=Zen+Maru+Gothic:wght@400;500;700;900&family=Hina+Mincho&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fffaf0;
+    --soft-green: #b8d4a8;
+    --bamboo: #7aaa5a;
+    --deep-green: #3d6b35;
+    --panda-black: #2a2a2a;
+    --soft-pink: #f5c2c7;
+    --warm-pink: #e8a0aa;
+    --rice-white: #f8f4e8;
+    --sky: #d4ecf7;
+    --accent-yellow: #f9e07a;
+    --space-purple: #c5b8e8;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background-color: var(--cream);
+    font-family: 'Zen Maru Gothic', sans-serif;
+    color: var(--panda-black);
+    overflow-x: hidden;
+    cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E🍙%3C/text%3E%3C/svg%3E") 16 16, auto;
+  }
+
+  /* ---- BACKGROUND DECO ---- */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 10% 20%, rgba(184,212,168,0.18) 0%, transparent 40%),
+      radial-gradient(circle at 90% 80%, rgba(245,194,199,0.18) 0%, transparent 40%),
+      radial-gradient(circle at 50% 50%, rgba(197,184,232,0.08) 0%, transparent 60%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ---- FLOATING DECO ELEMENTS ---- */
+  .deco-bg {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+  }
+  .deco-item {
+    position: absolute;
+    opacity: 0.13;
+    font-size: 2rem;
+    animation: floatDeco linear infinite;
+  }
+  @keyframes floatDeco {
+    0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.13; }
+    90% { opacity: 0.13; }
+    100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+  }
+
+  /* ---- WRAPPER ---- */
+  .page-wrap {
+    position: relative;
+    z-index: 1;
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 0 20px 80px;
+  }
+
+  /* ---- HERO ---- */
+  .hero {
+    text-align: center;
+    padding: 48px 0 20px;
+    position: relative;
+  }
+  .hero-image-wrap {
+    display: inline-block;
+    position: relative;
+    filter: drop-shadow(0 8px 24px rgba(122,170,90,0.25));
+    animation: heroBob 4s ease-in-out infinite;
+  }
+  @keyframes heroBob {
+    0%, 100% { transform: translateY(0px) rotate(-1deg); }
+    50% { transform: translateY(-12px) rotate(1deg); }
+  }
+  .hero-image-wrap img {
+    width: min(460px, 95vw);
+    height: auto;
+    background: radial-gradient(circle, rgba(184,212,168,0.4) 0%, rgba(255,250,240,0) 70%);
+  }
+
+  /* sparkles around image */
+  .sparkle {
+    position: absolute;
+    font-size: 1.2rem;
+    animation: sparkleAnim 2.5s ease-in-out infinite;
+  }
+  .sparkle:nth-child(2) { top: 5%; left: 5%; animation-delay: 0s; }
+  .sparkle:nth-child(3) { top: 10%; right: 8%; animation-delay: 0.5s; }
+  .sparkle:nth-child(4) { bottom: 15%; left: 2%; animation-delay: 1s; }
+  .sparkle:nth-child(5) { bottom: 10%; right: 5%; animation-delay: 1.5s; }
+  .sparkle:nth-child(6) { top: 40%; left: -5%; animation-delay: 0.8s; }
+  @keyframes sparkleAnim {
+    0%, 100% { transform: scale(0.8) rotate(-10deg); opacity: 0.6; }
+    50% { transform: scale(1.2) rotate(10deg); opacity: 1; }
+  }
+
+  /* ---- NAME TITLE ---- */
+  .name-title {
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    font-weight: 900;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    margin-top: 12px;
+    background: linear-gradient(135deg, var(--deep-green) 0%, var(--bamboo) 40%, var(--warm-pink) 70%, var(--panda-black) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 2px 8px rgba(61,107,53,0.15));
+  }
+
+  /* ---- CARDS ---- */
+  .card {
+    background: rgba(255,255,255,0.72);
+    backdrop-filter: blur(12px);
+    border-radius: 28px;
+    padding: 32px 28px;
+    margin: 28px 0;
+    border: 2.5px solid rgba(184,212,168,0.5);
+    box-shadow:
+      0 4px 24px rgba(122,170,90,0.10),
+      0 1px 0 rgba(255,255,255,0.9) inset;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+  .card:hover {
+    transform: translateY(-4px) rotate(0.3deg);
+    box-shadow: 0 12px 40px rgba(122,170,90,0.18);
+  }
+  .card::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(184,212,168,0.25) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .card-pink {
+    border-color: rgba(232,160,170,0.45);
+  }
+  .card-pink::before {
+    background: radial-gradient(circle, rgba(245,194,199,0.25) 0%, transparent 70%);
+  }
+
+  .card-space {
+    border-color: rgba(197,184,232,0.45);
+    background: rgba(255,255,255,0.75);
+  }
+  .card-space::before {
+    background: radial-gradient(circle, rgba(197,184,232,0.2) 0%, transparent 70%);
+  }
+
+  /* ---- INTRO TEXT ---- */
+  .intro-text {
+    font-size: 1.15rem;
+    line-height: 2;
+    color: #444;
+  }
+  .intro-text p {
+    margin-bottom: 8px;
+  }
+
+  /* ---- SECTION HEADER ---- */
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+  .section-header h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--deep-green);
+  }
+  .header-line {
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(90deg, var(--soft-green), transparent);
+    border-radius: 2px;
+  }
+
+  /* ---- TRAITS LIST ---- */
+  .traits-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .traits-list li {
+    background: linear-gradient(135deg, rgba(248,244,232,0.8) 0%, rgba(255,255,255,0.6) 100%);
+    border-radius: 16px;
+    padding: 14px 18px;
+    font-size: 1.05rem;
+    line-height: 1.65;
+    border: 1.5px solid rgba(184,212,168,0.4);
+    transition: transform 0.2s ease, background 0.2s ease;
+    position: relative;
+    padding-left: 44px;
+  }
+  .traits-list li:hover {
+    transform: translateX(6px);
+    background: linear-gradient(135deg, rgba(184,212,168,0.2) 0%, rgba(255,255,255,0.8) 100%);
+  }
+  .traits-list li .onigiri {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.2rem;
+  }
+
+  /* ---- THOUGHT BUBBLE ---- */
+  .thought-bubble {
+    background: linear-gradient(135deg, rgba(249,224,122,0.3) 0%, rgba(255,250,240,0.9) 100%);
+    border: 2px dashed rgba(249,224,122,0.6);
+    border-radius: 24px;
+    padding: 22px 24px;
+    text-align: center;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    position: relative;
+    margin-top: 20px;
+  }
+  .thought-bubble::after {
+    content: '';
+  }
+
+  /* ---- STORY SECTION ---- */
+  .story-header {
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--deep-green);
+    padding: 10px 0 4px;
+    letter-spacing: 0.05em;
+  }
+  .story-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin: 4px 0 18px;
+  }
+  .story-divider span {
+    font-size: 0.85rem;
+    color: var(--bamboo);
+    letter-spacing: 0.1em;
+  }
+  .story-divider::before,
+  .story-divider::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1.5px;
+    background: linear-gradient(90deg, transparent, var(--soft-green));
+  }
+  .story-divider::after {
+    background: linear-gradient(90deg, var(--soft-green), transparent);
+  }
+
+  .story-text {
+    font-size: 1.05rem;
+    line-height: 2.1;
+    color: #444;
+  }
+  .story-text p {
+    margin-bottom: 12px;
+  }
+  .story-highlight {
+    display: inline-block;
+    background: rgba(184,212,168,0.3);
+    border-radius: 8px;
+    padding: 2px 8px;
+  }
+
+  .reaction-box {
+    text-align: center;
+    background: rgba(197,184,232,0.2);
+    border-radius: 20px;
+    padding: 16px;
+    margin: 16px 0;
+    font-size: 1.05rem;
+    letter-spacing: 0.05em;
+    border: 1.5px solid rgba(197,184,232,0.4);
+  }
+
+  .adventure-end {
+    text-align: center;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--deep-green);
+    margin-top: 16px;
+    line-height: 1.8;
+  }
+
+  /* ---- FOOTER ---- */
+  footer {
+    text-align: center;
+    padding: 32px 0 16px;
+    color: #aaa;
+    font-size: 0.85rem;
+  }
+  footer .footer-panda {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: 8px;
+    animation: heroBob 3s ease-in-out infinite;
+  }
+
+  /* ---- FAMILY TAG ---- */
+  .family-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(245,194,199,0.35);
+    border: 1.5px solid rgba(232,160,170,0.4);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 0.95rem;
+    margin: 4px 4px 4px 0;
+    transition: transform 0.2s ease;
+  }
+  .family-tag:hover {
+    transform: scale(1.05);
+  }
+  .friends-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 12px;
+  }
+
+  /* ---- SCROLL REVEAL ---- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* stars background */
+  .stars {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+  }
+  .star {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: rgba(197,184,232,0.6);
+    animation: twinkle ease-in-out infinite;
+  }
+  @keyframes twinkle {
+    0%, 100% { opacity: 0.2; transform: scale(0.8); }
+    50% { opacity: 0.9; transform: scale(1.2); }
+  }
+
+  /* ---- FEED BUTTON ---- */
+  .feed-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    margin: 16px auto 4px;
+    padding: 12px 28px;
+    background: linear-gradient(135deg, #f9e07a 0%, #ffc97a 100%);
+    border: none;
+    border-radius: 999px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 1rem;
+    font-weight: 900;
+    color: #5a3a00;
+    cursor: pointer;
+    box-shadow: 0 4px 18px rgba(249,224,122,0.5), 0 2px 0 rgba(0,0,0,0.08) inset;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    letter-spacing: 0.04em;
+  }
+  .feed-btn:hover  { transform: scale(1.07) translateY(-2px); box-shadow: 0 8px 28px rgba(249,224,122,0.6); }
+  .feed-btn:active { transform: scale(0.96); }
+  .feed-btn .btn-emoji { font-size: 1.3rem; animation: heroBob 2s ease-in-out infinite; }
+
+  /* ---- FOOD MODAL ---- */
+  .food-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(30,28,20,0.72);
+    backdrop-filter: blur(6px);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.22s ease, visibility 0.22s ease;
+  }
+  .food-overlay.open {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .food-modal {
+    background: rgba(255,250,240,0.97);
+    border-radius: 28px;
+    padding: 28px 24px 24px;
+    max-width: 340px;
+    width: 90vw;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+    position: relative;
+    transform: scale(0.88) translateY(12px);
+    opacity: 0;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.22s ease;
+  }
+  .food-overlay.open .food-modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  .food-modal img {
+    width: 100%;
+    max-width: 260px;
+    border-radius: 16px;
+    margin-bottom: 14px;
+    box-shadow: 0 6px 20px rgba(122,170,90,0.2);
+    animation: heroBob 3s ease-in-out infinite;
+  }
+  .food-modal-msg {
+    font-size: 1rem;
+    font-weight: 700;
+    color: #3d6b35;
+    margin-bottom: 16px;
+    line-height: 1.6;
+  }
+  .food-modal-close {
+    padding: 10px 32px;
+    background: linear-gradient(135deg, #b8d4a8, #7aaa5a);
+    border: none;
+    border-radius: 999px;
+    font-family: 'Zen Maru Gothic', sans-serif;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(122,170,90,0.35);
+    transition: transform 0.15s;
+  }
+  .food-modal-close:hover  { transform: scale(1.05); }
+  .food-modal-close:active { transform: scale(0.96); }
+
+  /* ---- パンダ育成システム ---- */
+  .panda-status-wrap {
+    margin: 12px auto 0;
+    max-width: 320px;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 14px 18px 12px;
+    border: 2px solid rgba(184,212,168,0.45);
+    box-shadow: 0 4px 20px rgba(122,170,90,0.12);
+  }
+
+  .status-title-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+  }
+  .panda-title-badge {
+    font-size: 0.95rem;
+    font-weight: 700;
+    background: linear-gradient(135deg, var(--soft-pink), var(--warm-pink));
+    color: #5a1a2a;
+    padding: 3px 10px;
+    border-radius: 999px;
+    letter-spacing: 0.05em;
+  }
+  .panda-mood-label {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 700;
+  }
+
+  /* ゲージ共通 */
+  .gauge-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 7px;
+  }
+  .gauge-icon {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+    width: 26px;
+    text-align: center;
+  }
+  .gauge-label {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #666;
+    flex-shrink: 0;
+    width: 44px;
+  }
+  .gauge-track {
+    flex: 1;
+    height: 10px;
+    background: rgba(0,0,0,0.07);
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+  }
+  .gauge-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s cubic-bezier(0.34,1.56,0.64,1);
+    position: relative;
+  }
+  .gauge-fill::after {
+    content: '';
+    position: absolute;
+    top: 1px; left: 4px; right: 4px;
+    height: 3px;
+    background: rgba(255,255,255,0.45);
+    border-radius: 999px;
+  }
+  .gauge-fill-food {
+    background: linear-gradient(90deg, #f9a825, #ff8f00, #ffca28);
+  }
+  .gauge-fill-love {
+    background: linear-gradient(90deg, #f48fb1, #e91e8c, #ff80ab);
+  }
+  .gauge-pct {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: #888;
+    width: 36px;
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* ごはんボタンをステータス下へ */
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+  }
+  .feed-btn {
+    margin: 0 auto;
+  }
+
+  /* リアクションポップ */
+  .reaction-pop {
+    position: absolute;
+    top: -18px;
+    left: 50%;
+    transform: translateX(-50%) scale(0);
+    background: rgba(255,250,240,0.97);
+    border: 2px solid rgba(232,160,170,0.6);
+    border-radius: 16px;
+    padding: 5px 14px;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: #c04060;
+    white-space: nowrap;
+    pointer-events: none;
+    z-index: 10;
+    transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+    opacity: 0;
+  }
+  .reaction-pop.show {
+    transform: translateX(-50%) scale(1);
+    opacity: 1;
+  }
+  .panda-status-wrap { position: relative; }
+
+  /* ごほうびバッジ */
+  .reward-toast {
+    position: fixed;
+    bottom: 32px;
+    left: 50%;
+    transform: translateX(-50%) translateY(60px);
+    background: linear-gradient(135deg, #fff8e1, #fffde7);
+    border: 2.5px solid #ffe082;
+    border-radius: 20px;
+    padding: 14px 22px;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #5a3a00;
+    box-shadow: 0 8px 32px rgba(249,224,122,0.45);
+    z-index: 2000;
+    opacity: 0;
+    transition: transform 0.5s cubic-bezier(0.34,1.56,0.64,1), opacity 0.4s ease;
+    pointer-events: none;
+  }
+  .reward-toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+</style>
+</head>
+<body>
+
+<!-- Floating deco -->
+<div class="deco-bg" id="decoBg"></div>
+<div class="stars" id="stars"></div>
+
+<div class="page-wrap">
+
+  <!-- HERO -->
+  <section class="hero reveal">
+    <h1 class="name-title">おむすびぱんだ<span style="-webkit-text-fill-color:initial;background:none;">🍙🐼</span></h1>
+    <div class="hero-image-wrap" id="heroImageWrap">
+      <span class="sparkle">✨</span>
+      <span class="sparkle">🌿</span>
+      <span class="sparkle">🍃</span>
+      <span class="sparkle">⭐</span>
+      <span class="sparkle">🌸</span>
+      <img id="heroPandaImg" src="panda_happy.webp" alt="おむすびぱんだ" />
+    </div>
+
+    <div class="hero-actions">
+      <div class="panda-status-wrap" id="pandaStatusWrap">
+        <div class="reaction-pop" id="reactionPop">🎉</div>
+        <div class="status-title-row">
+          <span class="panda-title-badge" id="titleBadge">はじめまして</span>
+          <span class="panda-mood-label" id="moodLabel">😊 ごきげん</span>
+        </div>
+        <div class="gauge-row">
+          <span class="gauge-icon">🍚</span>
+          <span class="gauge-label">満腹度</span>
+          <div class="gauge-track">
+            <div class="gauge-fill gauge-fill-food" id="foodGaugeFill" style="width:70%"></div>
+          </div>
+          <span class="gauge-pct" id="foodPct">70%</span>
+        </div>
+        <div class="gauge-row">
+          <span class="gauge-icon">💕</span>
+          <span class="gauge-label">親密度</span>
+          <div class="gauge-track">
+            <div class="gauge-fill gauge-fill-love" id="loveGaugeFill" style="width:0%"></div>
+          </div>
+          <span class="gauge-pct" id="lovePct">0%</span>
+        </div>
+      </div>
+      <button class="feed-btn" onclick="feedPanda()">
+        <span class="btn-emoji">🍽️</span>ごはんをあげる
+      </button>
+    </div>
+
+  </section>
+  <div class="reward-toast" id="rewardToast"></div>
+
+  <!-- FOOD MODAL -->
+  <div class="food-overlay" id="foodOverlay" onclick="closeFoodModal(event)">
+    <div class="food-modal" id="foodModal">
+      <img id="foodImg" src="" alt="ごはん" />
+      <div class="food-modal-msg" id="foodMsg"></div>
+      <button class="food-modal-close" onclick="document.getElementById('foodOverlay').classList.remove('open')">
+        ごちそうさま🍙
+      </button>
+    </div>
+  </div>
+
+  <!-- INTRO CARD -->
+  <div class="card card-space reveal" style="transition-delay: 0.1s;">
+    <div class="intro-text">
+      <p>地球の食べ物にハマっちゃった宇宙人🛸🌍</p>
+      <p>ぱんだの姿に似てるけどちょっとおにぎり🍙🐼</p>
+      <br>
+      <p>仲良しの妻と息子がいる🏠</p>
+      <p>数人、友達の宇宙人や動物もいるらしい？</p>
+    </div>
+  </div>
+
+  <!-- TRAITS CARD -->
+  <div class="card reveal" style="transition-delay: 0.2s;">
+    <div class="section-header">
+      <h2>🐼 おむすびぱんだって？</h2>
+      <div class="header-line"></div>
+    </div>
+    <ul class="traits-list">
+      <li><span class="onigiri">🍙</span>何も考えてないねとよく言われる</li>
+      <li><span class="onigiri">🍙</span>ぽてっと座ってることがおおい</li>
+      <li><span class="onigiri">🍙</span>食べものを持っているとかわいいと言われる</li>
+      <li><span class="onigiri">🍙</span>いてくれるとナゾの安心感</li>
+      <li><span class="onigiri">🍙</span>おくさんと息子くんがいる</li>
+    </ul>
+    <img src="ompfamily.jpg" alt="ファミリー" style="width:100%;height:auto;border-radius:16px;display:block;margin-top:16px;">
+    <ul class="traits-list" style="display:none">
+    </ul>
+
+    <div class="thought-bubble">
+      さあて、今日は何を食べようかな～🙄𓈒𓂂𓏸💭
+    </div>
+  </div>
+
+  <!-- STORY CARD -->
+  <div class="card card-pink reveal" style="transition-delay: 0.3s;">
+    <p class="story-header">～🌍 地球の食べ物と出会ったきっかけ 🍴～</p>
+    <div class="story-divider"><span>✦ ✦ ✦</span></div>
+
+    <div class="story-text">
+      <p>
+        自分とよく似た生き物たちが、何かを口にいれている？
+        <span class="story-highlight">パンダというのか！？🐼🎋</span>
+      </p>
+      <p>自分も真似してみた。</p>
+    </div>
+
+    <div style="text-align:center;margin:16px 0 8px;font-size:1.1rem;">
+      ŧ‹"ŧ‹"(*´༥` *)ŧ‹"ŧ‹"🎋
+    </div>
+    <img src="Sasa.jpg" alt="笹" style="width:100%;height:auto;border-radius:16px;display:block;">
+
+    <div class="story-text">
+      <p style="text-align:center;">んんん！？？？</p>
+      <p>これが<strong>食べる</strong>っていうことなのか！？</p>
+      <p>他にはどんな食べ物が、あるんだ！？？</p>
+    </div>
+
+    <div class="reaction-box" style="background: rgba(184,212,168,0.2); border-color: rgba(184,212,168,0.5);">
+      興味津々🍙🐼<br>
+      ↜(⃔ っ ॑꒳ ॑c)⃕ﾜｸﾜｸ
+    </div>
+
+    <div class="adventure-end">
+      おむすびぱんだの冒険がはじまる🔭
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <span class="footer-panda">🐼</span>
+  おむすびぱんだ © 2026
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.12 });
+  reveals.forEach(el => observer.observe(el));
+
+  // Stars
+  const starsEl = document.getElementById('stars');
+  for (let i = 0; i < 40; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.cssText = `
+      left: ${Math.random()*100}%;
+      top: ${Math.random()*100}%;
+      animation-duration: ${1.5 + Math.random()*3}s;
+      animation-delay: ${Math.random()*4}s;
+      width: ${1.5 + Math.random()*2.5}px;
+      height: ${1.5 + Math.random()*2.5}px;
+    `;
+    starsEl.appendChild(s);
+  }
+
+  // Floating deco
+  const decoEl = document.getElementById('decoBg');
+  const decoEmojis = ['🍙','🎋','🍃','🌿','⭐','🌸','✨','🌱'];
+  function spawnDeco() {
+    const d = document.createElement('div');
+    d.className = 'deco-item';
+    d.textContent = decoEmojis[Math.floor(Math.random()*decoEmojis.length)];
+    d.style.cssText = `
+      left: ${Math.random()*100}%;
+      font-size: ${1.2 + Math.random()*1.5}rem;
+      animation-duration: ${14 + Math.random()*12}s;
+      animation-delay: 0s;
+    `;
+    decoEl.appendChild(d);
+    setTimeout(() => d.remove(), 28000);
+  }
+  for(let i=0;i<6;i++) setTimeout(spawnDeco, i*2000);
+  setInterval(spawnDeco, 3500);
+
+  // ============================================================
+  //  🐼 パンダ育成システム
+  // ============================================================
+
+  const育成_KEY    = 'omupan_ikusei_v1';
+  const HOUR_MS     = 60 * 60 * 1000;
+  const DAY_MS      = 24 * HOUR_MS;
+  const FOOD_DECAY_PER_HOUR = 4;   // 満腹度 -4/時間
+  const LOVE_DECAY_PER_DAY  = 0.5; // 親密度 -0.5/日
+  const FEED_AMOUNT = 25;          // 1回ごはんで+25
+
+  // 称号
+  const TITLES = [
+    { min:0,  label:'はじめまして' },
+    { min:20, label:'おともだち'   },
+    { min:40, label:'なかよし'     },
+    { min:60, label:'だいしんゆう' },
+    { min:80, label:'かぞく'       },
+    { min:100,label:'運命のおむすび' },
+  ];
+
+  // 気分ラベル（満腹度に対応）
+  const MOODS = [
+    { min:75, label:'😊 ごきげん',    img:'panda_happy.webp'  },
+    { min:50, label:'😐 ふつう',      img:'panda_normal.webp' },
+    { min:25, label:'😟 おなかすいた', img:'panda_hungry.webp' },
+    { min:0,  label:'😢 しょんぼり',  img:'panda_sad.webp'    },
+  ];
+
+  // ごほうび称号
+  const REWARDS = [
+    { love:25,  msg:'🎉 親密度25！「おともだち」になったよ🐼' },
+    { love:50,  msg:'💚 親密度50！「なかよし」に昇格！'       },
+    { love:75,  msg:'🌟 親密度75！「だいしんゆう」だよ～！'    },
+    { love:100, msg:'👑 親密度MAX！「運命のおむすび」達成！🍙✨' },
+  ];
+
+  // ランダムリアクション（満腹達成時10%）
+  const SPECIAL_REACTIONS = [
+    'ごろ～ん🐼💤',
+    'ねむねむ…💤💤',
+    '笹ふりふり🎋✨',
+    'おむすびダンス🍙🕺',
+    'うちゅうにもこんなうまいものが🛸',
+    'ŧ‹"ŧ‹"(*´༥` *)ŧ‹"ŧ‹"',
+  ];
+
+  function loadState() {
+    try {
+      const raw = localStorage.getItem(育成_KEY);
+      if (raw) return JSON.parse(raw);
+    } catch(_) {}
+    // 初期値
+    return {
+      food: 70,
+      love: 0,
+      lastTick: Date.now(),
+      lastDayTick: Date.now(),
+      rewardsSeen: [],
+    };
+  }
+
+  function saveState(s) {
+    try { localStorage.setItem(育成_KEY, JSON.stringify(s)); } catch(_) {}
+  }
+
+  // 経過時間でゲージを更新
+  function applyDecay(s) {
+    const now = Date.now();
+    const hoursElapsed = (now - s.lastTick) / HOUR_MS;
+    const daysElapsed  = (now - s.lastDayTick) / DAY_MS;
+
+    s.food = Math.max(0, s.food - hoursElapsed * FOOD_DECAY_PER_HOUR);
+    s.love = Math.max(0, s.love - daysElapsed  * LOVE_DECAY_PER_DAY);
+
+    s.lastTick    = now;
+    s.lastDayTick = now;
+    return s;
+  }
+
+  function getTitle(love) {
+    for (let i = TITLES.length - 1; i >= 0; i--) {
+      if (love >= TITLES[i].min) return TITLES[i].label;
+    }
+    return TITLES[0].label;
+  }
+
+  function getMood(food) {
+    for (const m of MOODS) {
+      if (food >= m.min) return m;
+    }
+    return MOODS[MOODS.length - 1];
+  }
+
+  function updateUI(s) {
+    const foodPct = Math.round(s.food);
+    const lovePct = Math.round(s.love);
+    const mood = getMood(s.food);
+    const title = getTitle(s.love);
+
+    document.getElementById('foodGaugeFill').style.width = foodPct + '%';
+    document.getElementById('loveGaugeFill').style.width = lovePct + '%';
+    document.getElementById('foodPct').textContent = foodPct + '%';
+    document.getElementById('lovePct').textContent = lovePct + '%';
+    document.getElementById('moodLabel').textContent = mood.label;
+    document.getElementById('titleBadge').textContent = title;
+
+    // パンダ画像切り替え
+    const pandaImg = document.getElementById('heroPandaImg');
+    if (pandaImg.getAttribute('data-state') !== mood.img) {
+      pandaImg.style.opacity = '0';
+      pandaImg.style.transform = 'scale(0.9)';
+      setTimeout(() => {
+        pandaImg.src = mood.img;
+        pandaImg.setAttribute('data-state', mood.img);
+        pandaImg.style.transition = 'opacity 0.5s ease, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)';
+        pandaImg.style.opacity = '1';
+        pandaImg.style.transform = 'scale(1)';
+      }, 280);
+    }
+  }
+
+  function showReactionPop(text) {
+    const pop = document.getElementById('reactionPop');
+    pop.textContent = text;
+    pop.classList.add('show');
+    setTimeout(() => pop.classList.remove('show'), 2200);
+  }
+
+  function showRewardToast(msg) {
+    const toast = document.getElementById('rewardToast');
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }
+
+  // 起動時
+  let pandaState = applyDecay(loadState());
+  saveState(pandaState);
+  updateUI(pandaState);
+
+  // 1分ごとに自動更新
+  setInterval(() => {
+    pandaState = applyDecay(pandaState);
+    saveState(pandaState);
+    updateUI(pandaState);
+  }, 60 * 1000);
+
+  // ---- ごはんをあげる ----
+  const FOOD_MSGS = [
+    'もぐもぐ…🍙 おいしい！',
+    'んんん！？これが食べるってことか！？',
+    'ŧ‹"ŧ‹"(*´༥` *)ŧ‹"ŧ‹" うまい…',
+    'ぽてっと座って食べるのが一番🐼',
+    '他には何があるんだ！？？',
+    'ナゾの安心感…🍃',
+    'さあて、今日は何を食べようかな～🙄',
+    '興味津々🍙🐼 ↜(⃔ っ ॑꒳ ॑c)⃕ﾜｸﾜｸ',
+    'うちゅうにもこんなうまいものがあったのか🛸',
+    'もう一個食べていい…？🥺',
+  ];
+
+  function feedPanda() {
+    const prevFood = pandaState.food;
+    pandaState.food = Math.min(100, pandaState.food + FEED_AMOUNT);
+
+    // 満腹達成で親密度+2
+    if (pandaState.food >= 100 || (prevFood < 100 && pandaState.food >= 100)) {
+      pandaState.food = 100;
+      pandaState.love = Math.min(100, pandaState.love + 2);
+
+      // ランダムリアクション（10%）
+      if (Math.random() < 0.1) {
+        const r = SPECIAL_REACTIONS[Math.floor(Math.random() * SPECIAL_REACTIONS.length)];
+        showReactionPop(r);
+      } else {
+        showReactionPop('まんぷく～！🍙💕');
+      }
+    } else {
+      showReactionPop('もぐもぐ…🍙');
+    }
+
+    // ごほうびチェック
+    REWARDS.forEach(reward => {
+      if (!pandaState.rewardsSeen.includes(reward.love)
+          && pandaState.love >= reward.love) {
+        pandaState.rewardsSeen.push(reward.love);
+        setTimeout(() => showRewardToast(reward.msg), 600);
+      }
+    });
+
+    saveState(pandaState);
+    updateUI(pandaState);
+
+    // 食べ物モーダル（既存）
+    const num = Math.floor(Math.random() * 119) + 1;
+    const pad = String(num).padStart(3, '0');
+    const img = document.getElementById('foodImg');
+    const msg = document.getElementById('foodMsg');
+    const overlay = document.getElementById('foodOverlay');
+
+    sbLog('feed_panda', { extra_val: `omp${pad}` });
+
+    overlay.classList.remove('open');
+    img.src = '';
+    msg.textContent = FOOD_MSGS[Math.floor(Math.random() * FOOD_MSGS.length)];
+    img.onload  = () => overlay.classList.add('open');
+    img.onerror = () => overlay.classList.add('open');
+    img.src = `omp${pad}.png`;
+  }
+
+  function closeFoodModal(e) {
+    if (e.target === document.getElementById('foodOverlay')) {
+      document.getElementById('foodOverlay').classList.remove('open');
+    }
+  }
+
+  // ── Supabase Analytics ──────────────────────────────────────────
+  const SB_URL = 'https://itraumqgammtgiouipak.supabase.co';
+  const SB_KEY = 'sb_publishable_ySnnol1KpqNs2yBxqkOVHQ_NZP_J8ZN';
+  const _pageStart = Date.now();
+
+  function getUtmSource() {
+    try { return new URLSearchParams(location.search).get('utm_source') || null; } catch(_) { return null; }
+  }
+
+  const WORKER_URL = 'https://omupan-tracker.ankantakeshi.workers.dev';
+
+  async function sbLog(event, extra = {}) {
+    try {
+      await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          event,
+          category:  extra.category  ?? null,
+          referrer:  extra.referrer  ?? (document.referrer || null),
+          lang:      extra.lang      ?? (navigator.language || null),
+          filename:  extra.filename  ?? null,
+          extra_val: extra.extra_val ?? null,
+        })
+      });
+    } catch(_) {}
+  }
+
+  // ① page_view + first_visit
+  (function() {
+    const utm    = getUtmSource();
+    const refVal = utm ? ('utm:' + utm) : (document.referrer || null);
+    sbLog('page_view', { referrer: refVal, lang: navigator.language });
+    const knownSns = ['x','bluesky','threads','line','instagram'];
+    const source = utm ? utm.toLowerCase() : '';
+    if (knownSns.includes(source)) {
+      sbLog('sns_referrer', { extra_val: source, lang: navigator.language });
+    }
+    // 新規訪問者判定
+    const VISIT_KEY = 'omupan_visited';
+    if (!localStorage.getItem(VISIT_KEY)) {
+      localStorage.setItem(VISIT_KEY, '1');
+      sbLog('first_visit', { referrer: refVal, lang: navigator.language });
+    }
+  })();
+
+  // ② stay_duration（離脱時）keepalive で捕捉率を最大化
+  let _staySent = false;
+  function sendStayDuration() {
+    if (_staySent) return;
+    _staySent = true;
+    const sec = Math.round((Date.now() - _pageStart) / 1000);
+    if (sec < 1) return;
+    fetch(`${SB_URL}/rest/v1/omupan_events`, {
+      method: 'POST',
+      headers: {
+        'apikey': SB_KEY, 'Authorization': `Bearer ${SB_KEY}`,
+        'Content-Type': 'application/json', 'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify({ event: 'stay_duration', extra_val: String(sec),
+        referrer: document.referrer || null, lang: navigator.language || null }),
+      keepalive: true
+    }).catch(() => {});
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden') sendStayDuration();
+  });
+  window.addEventListener('pagehide', sendStayDuration);
+
+  // ── カテゴリ・メディアトラッキング ─────────────────────────────
+
+  // カテゴリカードクリック追跡（category_click）
+  // 使い方: data-category="dragons" を要素に付けて onclick="trackCategory(this)"
+  function trackCategory(el) {
+    const cat = (el.dataset && el.dataset.category)
+      ? el.dataset.category
+      : (el.closest('[data-category]') ? el.closest('[data-category]').dataset.category : null);
+    sbLog('category_click', { category: cat });
+  }
+
+  // 「もっと見る」クリック追跡（more_click）
+  // 使い方: onclick="trackMore('dragons')"
+  function trackMore(category) {
+    sbLog('more_click', { category: category || null });
+  }
+
+  // リンククリック追跡（link_click）
+  // 使い方: onclick="trackLink('sns')" ← return しない（遷移はそのまま）
+  function trackLink(label) {
+    sbLog('link_click', { extra_val: label || null });
+  }
+
+  // 作品表示追跡（media_view）
+  // 使い方: trackMedia('dragons', 'dragon001.png') をモーダル表示時などに呼ぶ
+  function trackMedia(category, filename) {
+    sbLog('media_view', { category: category || null, extra_val: filename || null });
+  }
+
+  // ── /Supabase Analytics ─────────────────────────────────────────
+
+</script>
+</body>
+</html>
