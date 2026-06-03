@@ -1,0 +1,15 @@
+name: Delete omp files
+on:
+  workflow_dispatch:
+jobs:
+  delete:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Delete omp files
+        run: |
+          git config user.email "action@github.com"
+          git config user.name "GitHub Action"
+          git rm -f omp*.jpg omp*.png 2>/dev/null || true
+          git commit -m "delete omp files" || echo "nothing to delete"
+          git push
