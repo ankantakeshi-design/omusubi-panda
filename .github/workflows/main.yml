@@ -1,6 +1,8 @@
 name: Delete omp files
 on:
   workflow_dispatch:
+permissions:
+  contents: write
 jobs:
   delete:
     runs-on: ubuntu-latest
