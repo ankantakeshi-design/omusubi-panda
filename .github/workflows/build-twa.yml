@@ -23,6 +23,7 @@ jobs:
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         run: |
           npm install -g @bubblewrap/cli
+          sudo apt-get install -y expect
 
           mkdir -p ~/.bubblewrap
           cat > ~/.bubblewrap/config.json << 'CONFIG'
@@ -34,7 +35,9 @@ jobs:
 
           mkdir twa && cd twa
 
-          printf '\n\n\n\n\n\n\n\n\n\n' | bubblewrap init \
+          expect << 'EOF'
+          set timeout 120
+          spawn bubblewrap init \
             --manifest https://omusubi-panda.pages.dev/manifest.json \
             --directory . \
             --packageId com.omupan.app \
@@ -42,13 +45,16 @@ jobs:
             --appVersionName "1.0.0" \
             --signingKeyPath ./android.keystore \
             --signingKeyAlias android \
-            --signingKeyPassword "$KEY_PASSWORD" \
-            --signingStorePassword "$KEY_STORE_PASSWORD" \
+            --signingKeyPassword "$env(KEY_PASSWORD)" \
+            --signingStorePassword "$env(KEY_STORE_PASSWORD)" \
             --displayMode standalone \
             --host omusubi-panda.pages.dev \
             --startUrl / \
             --themeColor "#7aaa5a" \
             --backgroundColor "#fffaf0"
+          expect "?" { send "\r"; exp_continue }
+          expect eof
+          EOF
 
           bubblewrap build --skipPwaValidation
 
