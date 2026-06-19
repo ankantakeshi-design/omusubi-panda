@@ -1,0 +1,49 @@
+name: Build TWA APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build TWA with Bubblewrap
+        env:
+          KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
+          KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
+        run: |
+          npm install -g @bubblewrap/cli
+
+          mkdir twa && cd twa
+
+          bubblewrap init --manifest https://omusubi-panda.pages.dev/manifest.json \
+            --directory . \
+            --packageId com.omupan.app \
+            --appVersion 1 \
+            --appVersionName "1.0.0" \
+            --signingKeyPath ./android.keystore \
+            --signingKeyAlias android \
+            --signingKeyPassword "$KEY_PASSWORD" \
+            --signingStorePassword "$KEY_STORE_PASSWORD" \
+            --displayMode standalone \
+            --host omusubi-panda.pages.dev \
+            --startUrl / \
+            --themeColor "#7aaa5a" \
+            --backgroundColor "#fffaf0"
+
+          bubblewrap build
+
+      - name: Upload keystore (保管用)
+        uses: actions/upload-artifact@v4
+        with:
+          name: omupan-keystore
+          path: twa/android.keystore
+          retention-days: 90
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: omupan-apk
+          path: twa/app-release-signed.apk
+          retention-days: 30
