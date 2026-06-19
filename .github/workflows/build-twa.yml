@@ -34,7 +34,7 @@ jobs:
 
           mkdir twa && cd twa
 
-          printf '\n\n\n\n\n' | bubblewrap init \
+          printf '\n\n\n\n\n\n\n\n\n\n' | bubblewrap init \
             --manifest https://omusubi-panda.pages.dev/manifest.json \
             --directory . \
             --packageId com.omupan.app \
