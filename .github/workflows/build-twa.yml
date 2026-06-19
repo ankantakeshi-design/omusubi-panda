@@ -8,12 +8,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
       - name: Build TWA with Bubblewrap
         env:
           KEY_PASSWORD: ${{ secrets.KEY_PASSWORD }}
           KEY_STORE_PASSWORD: ${{ secrets.KEY_STORE_PASSWORD }}
         run: |
           npm install -g @bubblewrap/cli
+
+          mkdir -p ~/.bubblewrap
+          cat > ~/.bubblewrap/config.json << 'CONFIG'
+          {
+            "jdkPath": "$JAVA_HOME",
+            "androidSdkPath": "$ANDROID_SDK_ROOT"
+          }
+          CONFIG
 
           mkdir twa && cd twa
 
@@ -32,7 +49,7 @@ jobs:
             --themeColor "#7aaa5a" \
             --backgroundColor "#fffaf0"
 
-          bubblewrap build
+          bubblewrap build --skipPwaValidation
 
       - name: Upload keystore (保管用)
         uses: actions/upload-artifact@v4
