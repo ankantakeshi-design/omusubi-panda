@@ -1,1 +1,8 @@
-
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "dev.pages.omusubi_panda.twa",
+    "sha256_cert_fingerprints": ["D3:37:61:0D:DD:70:9E:22:99:3F:07:95:C8:FD:20:AB:08:B4:85:5E:35:BA:DD:93:A2:C7:03:2A:C1:8C:E0:47"]
+  }
+}]
