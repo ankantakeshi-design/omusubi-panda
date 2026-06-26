@@ -6096,7 +6096,7 @@ const OMP_FOOD_LIST = [
       <button class="memory-mini-btn" onclick="closeMoreMenuInstant(); openMemoryGame()" aria-label="神経衰弱をはじめる" style="justify-content:center;width:100%;">
         <span data-ja="🃏 神経衰弱🐼" data-en="🃏 Memory Game🐼">🃏 神経衰弱🐼</span>
       </button>
-      <button class="memory-mini-btn" onclick="closeMoreMenuInstant(); openTouchpon()" aria-label="タッチぽんをはじめる" style="justify-content:center;width:100%;background:rgba(184,212,168,0.28);border-color:rgba(122,170,90,0.55);color:#3d6b35;">
+      <button class="memory-mini-btn" onclick="closeMoreMenuInstant(); openTouchpon()" aria-label="タッチぽんをはじめる" style="justify-content:center;width:100%;background:rgba(255,180,80,0.28);border-color:rgba(220,130,40,0.55);color:#b85c00;">
         <span data-ja="👆 タッチぽん🍙" data-en="👆 Touch Pon🍙">👆 タッチぽん🍙</span>
       </button>
 
@@ -15573,7 +15573,8 @@ window.addEventListener('resize', buildGround);
       </div>
       <div class="tp-panda-comment" id="tp-pandaComment"></div>
       <div class="tp-achievements-wrap">
-        <div class="tp-best-records-title" data-ja="🎖️ 実績" data-en="🎖️ Badges">🎖️ 実績</div>
+        <div class="tp-best-records-title" data-ja="🎖️ 今週の実績" data-en="🎖️ Weekly Badges">🎖️ 今週の実績</div>
+        <div id="tp-weekReset" style="font-size:0.72rem;color:#aaa;text-align:center;margin-bottom:6px;"></div>
         <div id="tp-achievementsList"></div>
       </div>
       <div class="tp-total-stats-wrap">
@@ -15940,8 +15941,34 @@ const TP_ACHIEVEMENTS = [
   { id:'games30',   icon:'🏅', ja:'30回プレイ',    en:'30 Plays',        check:(s,g)=> s.totalGames >= 30 },
 ];
 const TP_ACHV_KEY = 'omupan_touchpon_achv';
-function tpLoadAchv() { try { return JSON.parse(localStorage.getItem(TP_ACHV_KEY) || '[]'); } catch(e) { return []; } }
-function tpSaveAchv(a) { try { localStorage.setItem(TP_ACHV_KEY, JSON.stringify(a)); } catch(e) {} }
+
+// 月曜0時基準の週番号を返す
+function tpWeekKey() {
+  const now = new Date();
+  // 月曜起点に補正（0=日,1=月,...→ 月曜を0にする）
+  const day = (now.getDay() + 6) % 7; // 月=0, 火=1, ... 日=6
+  const monday = new Date(now);
+  monday.setHours(0, 0, 0, 0);
+  monday.setDate(now.getDate() - day);
+  return monday.toISOString().slice(0, 10); // "YYYY-MM-DD"（その週の月曜日）
+}
+
+function tpLoadAchv() {
+  try {
+    const raw = JSON.parse(localStorage.getItem(TP_ACHV_KEY) || '{}');
+    // 旧形式（配列）の場合はリセット
+    if (Array.isArray(raw)) return [];
+    const week = tpWeekKey();
+    // 週が違ったらリセット
+    if (raw.week !== week) return [];
+    return raw.ids || [];
+  } catch(e) { return []; }
+}
+function tpSaveAchv(a) {
+  try {
+    localStorage.setItem(TP_ACHV_KEY, JSON.stringify({ week: tpWeekKey(), ids: a }));
+  } catch(e) {}
+}
 function tpCheckAchievements(stats, gameResult) {
   const unlocked = tpLoadAchv();
   const newlyUnlocked = [];
@@ -15955,6 +15982,13 @@ function tpRenderAchievements(unlocked, newlyUnlocked) {
   const el = document.getElementById('tp-achievementsList');
   if (!el) return;
   const isEn = (typeof _currentLang !== 'undefined' && _currentLang === 'en');
+
+  // リセット日メモ
+  const resetStr = `🎋 月曜0時にリセット`;
+  const resetStrEn = `🎋 Resets every Monday at midnight`;
+  const resetEl = document.getElementById('tp-weekReset');
+  if (resetEl) resetEl.textContent = isEn ? resetStrEn : resetStr;
+
   el.innerHTML = `<div class="tp-achievements-grid">${TP_ACHIEVEMENTS.map(a => {
     const isUnlocked = unlocked.includes(a.id);
     const isNew = newlyUnlocked.includes(a.id);
