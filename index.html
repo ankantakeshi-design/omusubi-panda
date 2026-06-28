@@ -15117,25 +15117,35 @@ window.updateMemLang = function updateMemLang() {
     const video = document.getElementById('heroPandaVideo');
     if (!video) return;
     const src = getNextHeroVideo();
-    video.loop = false;
-    video.src = src;
-    video.load();
-    video.play().catch(() => {});
-    video.addEventListener('ended', function onEnd() {
-      video.removeEventListener('ended', onEnd);
-      playNextHeroVideo();
-    });
+
+    // フェードアウト
+    video.style.transition = 'opacity 1s ease';
+    video.style.opacity = '0';
+
+    setTimeout(() => {
+      video.loop = false;
+      video.src = src;
+      video.load();
+      video.play().catch(() => {});
+
+      // フェードイン
+      video.style.opacity = '1';
+
+      video.addEventListener('ended', function onEnd() {
+        video.removeEventListener('ended', onEnd);
+        playNextHeroVideo();
+      });
+    }, 1000);
   }
 
   // 最初の再生を開始（autoplay属性の代わり）
   (function() {
     const video = document.getElementById('heroPandaVideo');
     if (!video) return;
-    // すでに autoplay で omupansasa が流れているのでその ended を拾う
     video.loop = false;
     video.addEventListener('ended', function onFirstEnd() {
       video.removeEventListener('ended', onFirstEnd);
-      heroFirstPlay = false; // 初回終了済みに
+      heroFirstPlay = false;
       playNextHeroVideo();
     });
   })();
