@@ -3301,149 +3301,79 @@
 <!-- Light burst overlay for vote reveal -->
 <div class="light-burst" id="lightBurst"></div>
 
-<!-- Floating deco -->
-<div class="deco-bg" id="decoBg"></div>
-<div class="stars" id="stars"></div>
-
-<!-- シャボン玉レイヤー -->
-<div id="bubbleLayer" style="position:fixed;inset:0;pointer-events:none;z-index:50;overflow:hidden;"></div>
-
-<style>
-.soap-bubble {
-  position: absolute;
-  border-radius: 50%;
-  pointer-events: auto;
-  cursor: pointer;
-  animation: bubbleFloat linear forwards;
-}
-@keyframes bubbleFloat {
-  0%   { transform: translateY(0) translateX(0); opacity: 0; }
-  10%  { opacity: 0.9; }
-  90%  { opacity: 0.8; }
-  100% { transform: translateY(-115vh) translateX(var(--bx)); opacity: 0; }
-}
-@keyframes bubblePop {
-  0%   { transform: scale(1);   opacity: 0.9; }
-  40%  { transform: scale(1.5); opacity: 0.6; }
-  100% { transform: scale(2.2); opacity: 0; }
-}
-.bubble-shard {
-  position: fixed;
-  border-radius: 50%;
-  pointer-events: none;
-  animation: shardFly var(--sd) ease-out forwards;
-}
-@keyframes shardFly {
-  0%   { transform: translate(0,0) scale(1);                         opacity: 0.9; }
-  60%  { transform: translate(var(--sx), var(--sy)) scale(0.5);      opacity: 0.6; }
-  100% { transform: translate(var(--sx), var(--sy)) scale(0);        opacity: 0; }
-}
-</style>
-
-<script>
-(function() {
-  const layer = document.getElementById('bubbleLayer');
-  if (!layer) return;
-
-  function spawnBubble() {
-    // タッチぽん/神経衰弱プレイ中はシャボン玉レイヤーごと非表示になっており
-    // 見えないうえに無駄な負荷（box-shadow多重・radial-gradient）になるため、
-    // ゲーム中は新規生成そのものをスキップする（deco側と同じ考え方）。
-    if (document.body.classList.contains('game-open')) return;
-    const size = 80 + Math.random() * 120;
-    const left = 5 + Math.random() * 88;
-    const dur  = 10 + Math.random() * 8;
-    const driftX = (Math.random() - 0.5) * 100;
-    const hue = Math.floor(Math.random() * 360);
-    const r1 = 180 + Math.floor(Math.random()*75);
-    const g1 = 200 + Math.floor(Math.random()*55);
-
-    const b = document.createElement('div');
-    b.className = 'soap-bubble';
-    b.style.cssText = `
-      width:${size}px; height:${size}px;
-      left:${left}%; top:100vh;
-      --bx:${driftX}px;
-      animation-duration:${dur}s;
-      background: radial-gradient(circle at 30% 28%,
-        rgba(255,255,255,0.92) 0%,
-        rgba(${r1},${g1},255,0.35) 35%,
-        rgba(255,${r1},240,0.2) 65%,
-        rgba(200,230,255,0.06) 100%
-      );
-      border: 2.5px solid rgba(255,255,255,0.95);
-      box-shadow:
-        inset 4px 5px 14px rgba(255,255,255,0.9),
-        inset -3px -3px 10px rgba(${hue%255},${(hue+100)%255},255,0.4),
-        0 0 ${Math.floor(size*0.3)}px rgba(160,210,255,0.55);
-    `;
-
-    // タッチ/クリックで割れる
-    function popBubble(e) {
-      e.stopPropagation();
-      // タッチした実際の座標を使う
-      const cx = e.touches ? e.touches[0].clientX : e.clientX;
-      const cy = e.touches ? e.touches[0].clientY : e.clientY;
-
-      // 今まさに見えている位置(浮遊アニメで動いた後の実座標)を取得
-      const rect = b.getBoundingClientRect();
-
-      // 元の要素をそのまま複製し、複製のほうを弾けさせる
-      // (動いている最中の要素を直接書き換えると、一瞬角丸が外れて四角く見えることがあるため)
-      const pop = b.cloneNode(true);
-      pop.style.position = 'fixed';
-      pop.style.left     = rect.left + 'px';
-      pop.style.top      = rect.top + 'px';
-      pop.style.width    = rect.width + 'px';
-      pop.style.height   = rect.height + 'px';
-      pop.style.margin   = '0';
-      pop.style.pointerEvents = 'none';
-      pop.style.animation = 'bubblePop 0.25s ease-out forwards';
-      document.body.appendChild(pop);
-      setTimeout(() => pop.remove(), 260);
-
-      // 元のシャボン玉は即座に消す
-      b.remove();
-
-      // 破片8個
-      const colors = ['255,255,255','180,220,255','255,200,240','200,240,255','255,220,200'];
-      for (let si = 0; si < 8; si++) {
-        const angle = (si / 8) * Math.PI * 2;
-        const dist  = 40 + Math.random() * 60;
-        const shard = document.createElement('div');
-        shard.className = 'bubble-shard';
-        const sc = colors[Math.floor(Math.random() * colors.length)];
-        const ss = 6 + Math.random() * 10;
-        const sd = (0.4 + Math.random() * 0.2).toFixed(2);
-        shard.style.cssText = `
-          width:${ss}px; height:${ss}px;
-          left:${cx}px; top:${cy}px;
-          --sx:${Math.cos(angle)*dist}px;
-          --sy:${Math.sin(angle)*dist}px;
-          --sd:${sd}s;
-          background: radial-gradient(circle, rgba(${sc},0.9), rgba(${sc},0.2));
-          box-shadow: 0 0 6px rgba(${sc},0.8);
-        `;
-        document.body.appendChild(shard);
-        setTimeout(() => shard.remove(), parseFloat(sd) * 1000 + 100);
-      }
-    }
-    b.addEventListener('click',      popBubble, { once: true });
-    b.addEventListener('touchstart', popBubble, { once: true, passive: false });
-
-    layer.appendChild(b);
-    setTimeout(() => b.remove(), (dur + 2) * 1000);
-  }
-
-  for (let i = 0; i < 4; i++) setTimeout(spawnBubble, i * 800);
-  setInterval(spawnBubble, 3333);
-})();
-</script>
 
 <div class="page-wrap">
 
   <!-- HERO -->
   <main>
+
+  <!-- ▼▼ 今日の試食（2026-11-22 新設：開いたらまずこれ1つだけ） ▼▼ -->
+  <style>
+    .shishoku-card{box-sizing:border-box;max-width:640px;margin:14px auto 18px;padding:20px 18px;background:#ffffff;border:3px solid #7aaa5a;border-radius:20px;box-shadow:0 4px 14px rgba(70,110,50,.18);text-align:center;}
+    .shishoku-card *{box-sizing:border-box;}
+    .shishoku-label{font-size:16px;font-weight:700;color:#33691e;letter-spacing:.08em;margin:0 0 6px;}
+    .shishoku-title{font-size:26px;font-weight:900;color:#1b5e20;margin:0 0 10px;line-height:1.4;}
+    .shishoku-name{font-size:24px;font-weight:900;color:#bf360c;margin:0 0 8px;line-height:1.4;}
+    .shishoku-text{font-size:17px;line-height:1.7;color:#263238;margin:0 0 10px;text-align:left;}
+    .shishoku-text b{color:#1b5e20;}
+    .shishoku-voice{font-size:17px;line-height:1.7;color:#37474f;background:#f1f8e9;border-radius:14px;padding:10px 12px;margin:0 0 14px;text-align:left;}
+    .shishoku-btn{display:block;width:100%;min-height:52px;padding:14px 16px;font-size:18px;font-weight:800;color:#ffffff;background:#2e7d32;border:none;border-radius:999px;cursor:pointer;}
+    .shishoku-btn:active{opacity:.85;}
+    .shishoku-btn.decided{background:#558b2f;}
+  </style>
+  <section class="shishoku-card" id="shishokuCard" aria-label="今日の試食">
+    <p class="shishoku-label">🍙 今日の試食 🐼</p>
+    <h2 class="shishoku-title">今日は、これを味見しよう</h2>
+    <p class="shishoku-name" id="shishokuName">よみこみ中…</p>
+    <p class="shishoku-text" id="shishokuPoint"></p>
+    <p class="shishoku-text" id="shishokuRecipe"></p>
+    <p class="shishoku-voice" id="shishokuVoice"></p>
+    <button type="button" class="shishoku-btn" id="shishokuBtn">今日はこれにする</button>
+  </section>
+  <script>
+  (function(){
+    var DATA = {"1": [["みかん", "ビタミンCが豊富で、冬の乾燥する季節にうれしい果物です。", "そのまま食べるのが一番です。皮は干してお風呂に入れると、昔ながらの温まる工夫になりますよ。"], ["大根", "冬に甘みが増します。消化を助ける成分を含むといわれる、冬の代表野菜です。", "厚めに切ってふろふき大根に。だしで柔らかく煮て、味噌をのせるだけでごちそうになります。"], ["白菜", "水分が多く、冬に甘みが増します。鍋に欠かせない野菜です。", "鍋に入れるのが定番です。塩もみして浅漬けにすると、もう一品ほしいときに助かりますよ。"], ["ほうれん草", "鉄分や葉酸が豊富です。寒さに当たると甘みが増すといわれます。", "さっと茹でておひたしに。根元の赤い部分にも栄養があるので、よく洗って一緒にどうぞ。"], ["小松菜", "カルシウムが豊富な緑黄色野菜です。冬に味が濃くなります。", "油揚げと一緒に煮びたしに。炒めてもおいしく、忙しい日にも助かります。"], ["ブリ", "DHAなどを含むといわれる魚です。冬の「寒ブリ」は脂がのって格別です。", "照り焼きが定番です。大根と煮るぶり大根も、冬らしい一品になりますよ。"]], "2": [["菜の花", "春の訪れを告げる野菜です。ビタミンCが豊富といわれます。", "さっと茹でて、からし和えやおひたしに。ほろ苦さが春の味です。"], ["ブロッコリー", "ビタミンCが豊富な野菜です。冬から早春に甘みが増します。", "小房に分けて蒸し煮にすると、栄養が逃げにくいといわれます。塩とオリーブオイルだけでおいしいですよ。"], ["長ねぎ", "冬に甘みが増します。香りの成分は体を温めるといわれます。", "鍋や味噌汁にたっぷりと。青い部分も刻んで薬味に使うと、無駄がありません。"], ["いちご", "ビタミンCが豊富な果物です。", "洗ってそのままが一番です。つぶして牛乳と混ぜるいちごミルクも、懐かしい味になりますよ。"], ["タラ", "淡白で消化のよい白身魚です。冬が旬で、鍋によく合います。", "白菜と一緒に鍋に。ポン酢でさっぱりと。フライにしてもふんわりします。"], ["牡蠣", "亜鉛や鉄分を含むといわれる、海の幸です。", "よく洗って、片栗粉をまぶしてバター焼きに。加熱用はしっかり火を通してくださいね。"]], "3": [["新玉ねぎ", "春だけの、みずみずしい玉ねぎです。辛みが少なく、生で食べられます。", "薄くスライスして、水にさらさずそのままサラダに。かつお節と醤油でどうぞ。"], ["春キャベツ", "柔らかく甘い、春のキャベツです。ビタミンCや食物繊維が含まれます。", "ざく切りにして塩昆布と和えるだけ。生の甘みを楽しんでくださいね。"], ["わかめ", "海の野菜です。ミネラルや食物繊維が含まれます。", "酢の物や味噌汁に。乾燥わかめは水で戻すだけなので、常備しておくと助かります。"], ["ホタルイカ", "春に楽しめる、小さなイカです。", "茹でたものを酢味噌で。目と口ばしを取ると、食べやすくなりますよ。"], ["はっさく", "さっぱりした酸味とほろ苦さのある柑橘です。ビタミンCが含まれます。", "皮をむいてそのまま。ほろ苦さが苦手な方は、サラダに散らすと爽やかです。"], ["うど", "春の山菜です。独特の香りと歯ざわりが楽しめます。", "皮を厚めにむいて酢味噌和えに。皮はきんぴらにすると、香りが楽しめますよ。"]], "4": [["たけのこ", "春の味覚の代表です。食物繊維が含まれます。", "若竹煮が定番です。わかめと一緒に炊くと、春らしい香りが広がります。"], ["新じゃがいも", "皮が薄く、みずみずしい春のじゃがいもです。", "皮ごと蒸して、バターと塩で。シンプルなほど、新じゃがの味が分かりますよ。"], ["アスパラガス", "アスパラギン酸という成分を含むことで知られます。春に太く甘くなります。", "下の硬い部分を折って、さっと茹でるかグリルで焼いて。塩やマヨネーズでどうぞ。"], ["そら豆", "初夏の短い間だけ楽しめる豆です。たんぱく質やビタミンを含みます。", "さやごとグリルで焼くと、ほくほくになります。塩を少しふってどうぞ。"], ["カツオ", "春の「初鰹」で知られます。鉄分やたんぱく質が豊富といわれます。", "たたきにして、玉ねぎスライスとポン酢で。薬味をたっぷりのせるのが、おいしさの秘訣です。"], ["あさり", "春に身がふっくらします。鉄分を含むといわれます。", "酒蒸しや味噌汁に。砂抜きは塩水に浸けて、暗い場所に置くと進みますよ。"]], "5": [["スナップエンドウ", "さやごと食べられる豆です。甘みがあり、ビタミンCを含みます。", "筋を取ってさっと茹で、マヨネーズで。炒め物にも合いますよ。"], ["グリーンピース", "さやから出したての甘さが格別です。食物繊維を含みます。", "豆ごはんが定番です。炊き上がりに混ぜると、色がきれいに仕上がります。"], ["びわ", "初夏の短い旬の果物です。やさしい甘さがあります。", "皮をむいてそのまま。種のまわりは渋みがあるので、少し厚めにむくといいですよ。"], ["キス", "上品な白身魚です。初夏の天ぷらで知られます。", "天ぷらが定番です。塩焼きでも、淡白な味わいが楽しめますよ。"], ["アジ", "初夏から脂がのってきます。DHAなどを含むといわれます。", "たたきやなめろうに。刺身用でないものは、塩焼きやフライでどうぞ。"], ["ふき", "春の山菜です。香りとほろ苦さが特徴です。", "下茹でして皮をむき、煮物に。油揚げと一緒に炊くと、味がしみますよ。"]], "6": [["梅", "クエン酸を含むといわれる、日本の伝統食材です。", "梅シロップがおすすめです。梅1kgに氷砂糖1kgを重ねて漬け、毎日瓶を揺らして、2週間ほどで完成します。"], ["さくらんぼ", "初夏の、宝石のような果物です。カリウムなどを含みます。", "冷やしてそのまま。軸が緑で、実につやのあるものが新鮮といわれます。"], ["とうもろこし", "夏の甘い野菜です。食物繊維やビタミンB群を含みます。", "皮を1〜2枚残して蒸すと、甘みが増します。茹でたてに塩を少しどうぞ。"], ["枝豆", "たんぱく質や葉酸を含む、栄養豊かな豆です。", "塩もみしてから茹でると、色よく仕上がります。茹で時間は4分ほどが目安です。"], ["きゅうり", "水分が多く、体を涼しくする食材といわれます。", "板ずりして塩もみに。酢の物や浅漬けで、さっぱりとどうぞ。"], ["アユ", "清流の魚で、「香魚」とも呼ばれます。初夏が旬です。", "塩焼きが定番です。内臓のほろ苦さも、鮎らしい味わいですよ。"]], "7": [["トマト", "リコピンやビタミンCを含むことで知られます。夏に甘みが増します。", "冷やして、塩を少しふるだけ。オリーブオイルと合わせてもおいしいですよ。"], ["なす", "水分が多く、夏の体にうれしい野菜といわれます。皮の色は、ポリフェノールの一種を含みます。", "焼きなすがおすすめです。皮ごと焼いてむくと、とろける食感になります。"], ["ピーマン", "ビタミンCが豊富な野菜です。夏にたくさん出回ります。", "細切りにして炒め物に。丸ごと焼いてもおいしいですよ。"], ["オクラ", "ねばねばの成分は、食物繊維の一種です。夏に人気の野菜です。", "さっと茹でて刻み、納豆やそうめんの薬味に。ねばりが食欲を誘います。"], ["スイカ", "水分がたっぷりで、夏の水分補給に親しまれてきました。", "冷やしてそのまま。少し塩をふると、甘みが引き立つといわれます。"], ["ウナギ", "ビタミンAやB群が豊富といわれ、土用の丑の日に親しまれます。", "市販の蒲焼は、フライパンで酒蒸しするとふっくらします。温かいごはんにのせてどうぞ。"], ["桃", "やさしい甘さと香りの果物です。食物繊維やカリウムを含みます。", "食べる1時間ほど前に冷やすのがおすすめです。冷やしすぎると、甘みを感じにくくなりますよ。"]], "8": [["ゴーヤ", "苦みが特徴の夏野菜です。ビタミンCが豊富といわれます。", "ゴーヤチャンプルーが定番です。塩もみすると、苦みがやわらぎますよ。"], ["かぼちゃ", "ビタミンやβ-カロテンが豊富といわれます。夏に収穫されます。", "煮物が定番です。面取りすると、煮崩れしにくくなりますよ。"], ["モロヘイヤ", "刻むとねばりが出る、栄養豊かな夏の葉野菜です。", "さっと茹でて刻み、おひたしや味噌汁に。ねばりが、夏の食卓にうれしい一品です。"], ["ぶどう", "ポリフェノールを含むことで知られます。品種ごとの味比べも楽しい果物です。", "冷やしてそのまま。凍らせると、シャーベットのようなデザートになりますよ。"], ["梨", "みずみずしく、シャキシャキした食感です。水分と食物繊維を含みます。", "皮をむいてそのまま。サラダに入れると、爽やかな甘みがアクセントになります。"], ["ハモ", "夏の関西で親しまれる魚です。小骨が多いので、「骨切り」されて売られます。", "湯引きして梅肉で。照り焼きや天ぷらでも楽しめますよ。"]], "9": [["サンマ", "秋の味覚の代表です。DHAなどを含むといわれます。", "塩焼きが一番です。大根おろしとすだちを添えると、秋のごちそうになりますよ。"], ["栗", "秋の実りです。食物繊維やビタミンCを含みます。", "栗ごはんが定番です。皮むきは、お湯に浸けると少し楽になりますよ。"], ["さつまいも", "食物繊維が豊富な芋です。焼くと甘みが増します。", "焼き芋が一番です。じっくり加熱すると、ねっとり甘くなりますよ。"], ["柿", "ビタミンCが豊富といわれる、秋の果物です。", "そのまま食べても、サラダや白和えに入れても。やわらかくなった柿は、デザートのように甘いですよ。"], ["まいたけ", "香りのよいキノコです。食物繊維を含みます。", "天ぷらや炊き込みごはんに。手でほぐすと、香りが立ちますよ。"], ["りんご", "食物繊維やカリウムを含みます。「医者いらず」と、昔からいわれてきました。", "皮ごと食べると栄養を余さず取れるといわれます。よく洗ってどうぞ。"]], "10": [["里芋", "ねっとりした食感の、秋の芋です。食物繊維を含みます。", "煮物が定番です。塩もみしてぬめりを取ると、味がしみやすくなりますよ。"], ["れんこん", "穴の向こうが見えることから、縁起のよい食材といわれます。ビタミンCを含みます。", "きんぴらや天ぷらに。酢水にさらすと、色が白く仕上がります。"], ["サケ", "秋に川をのぼる「秋鮭」が知られます。身の色は、アスタキサンチンという色素によるものです。", "塩焼きやホイル焼きに。きのこや野菜と一緒に蒸すと、一品で満足できますよ。"], ["ししゃも", "秋が旬の小さな魚です。子持ちは、卵がたっぷりです。", "グリルで焼くだけ。丸ごと食べられて、カルシウムも取れるといわれます。"], ["しいたけ", "香りとうまみのキノコです。干ししいたけは、うまみが凝縮します。", "網焼きにして、醤油をたらすだけ。軸も刻んで、炒め物にどうぞ。"], ["りんご", "食物繊維やカリウムを含みます。秋から冬が旬です。", "焼きりんごにすると、甘みが増してデザートになります。すりおろしてヨーグルトに混ぜてもおいしいですよ。"]], "11": [["ゆず", "香りのよい柑橘です。皮に、香りの成分が多く含まれます。", "皮を刻んで薬味に。果汁はポン酢に。冬至には、お風呂に入れる風習もありますね。"], ["ごぼう", "食物繊維が豊富な根菜です。秋から冬に、味が濃くなります。", "きんぴらごぼうが定番です。皮の近くに香りがあるので、たわしで軽く洗う程度でどうぞ。"], ["かぶ", "冬に甘みが増す野菜です。葉にも栄養があります。", "浅漬けや煮物に。葉は刻んで味噌汁やふりかけにすると、無駄がありません。"], ["カニ", "冬のごちそうです。たんぱく質などを含むといわれます。", "茹でガニは、そのままが一番です。残ったら、炊き込みごはんやお味噌汁にどうぞ。"], ["サバ", "「秋サバ」といわれ、脂がのります。DHAなどを含むといわれます。", "味噌煮が定番です。塩焼きなら、大根おろしを添えてどうぞ。"], ["ブロッコリー", "ビタミンCが豊富な野菜です。冬のはじめにも甘みがあります。", "スープやシチューに入れても。冬の食卓の緑に、助かりますよ。"]], "12": [["みかん", "ビタミンCが豊富で、冬の乾燥する季節にうれしい果物です。", "炬燵で食べる、冬の味です。白い筋にも栄養があるといわれ、そのまま食べても大丈夫ですよ。"], ["かぼちゃ", "冬至に食べる風習があります。ビタミンやβ-カロテンが豊富といわれます。", "小豆と煮る「いとこ煮」も、冬の味です。ゆず湯と合わせて、温まってくださいね。"], ["ほうれん草", "鉄分や葉酸が豊富です。寒締めのものは、甘みが強いといわれます。", "胡麻和えが定番です。さっと茹でて、水気を絞ってどうぞ。"], ["小松菜", "カルシウムが豊富な緑黄色野菜です。冬に味が濃くなります。", "味噌汁や炒め物に。油と合わせると、栄養の吸収がよいといわれます。"], ["白菜", "水分が多く、冬に甘みが増します。鍋に欠かせない野菜です。", "豚肉と重ねるミルフィーユ鍋が簡単です。漬物にすると、冬の保存食になりますよ。"], ["アンコウ", "冬の鍋で知られる魚です。コラーゲンを含むといわれます。", "あんこう鍋が定番です。肝のあん肝は、お酒のお供に珍重されます。"]]};
+    var VOICES = [
+      'おむぱん：ぼく、これ気になる！ ちょっとだけ味見してみよう🍙',
+      'おむぱん：地球のごはんは、毎日ちがうから楽しいね🐼',
+      'おむぱん：今日の一口が、明日の元気になるかも🎋',
+      'おむぱん：むずかしく考えなくて大丈夫。まずは一口から🍙',
+      'おむぱん：おいしいものに出会うと、ぼくはごきげんになるよ🐼'
+    ];
+    function dayOfYear(d){var s=new Date(d.getFullYear(),0,0);return Math.floor((d-s)/86400000);}
+    var now = new Date();
+    var monthItems = DATA[String(now.getMonth()+1)] || [];
+    if(!monthItems.length) return;
+    var idx = dayOfYear(now) % monthItems.length;
+    var item = monthItems[idx];
+    var nameEl=document.getElementById('shishokuName');
+    var pointEl=document.getElementById('shishokuPoint');
+    var recipeEl=document.getElementById('shishokuRecipe');
+    var voiceEl=document.getElementById('shishokuVoice');
+    var btn=document.getElementById('shishokuBtn');
+    if(!nameEl||!btn) return;
+    nameEl.textContent = '旬の試食は「' + item[0] + '」';
+    pointEl.innerHTML = '';
+    var b1=document.createElement('b'); b1.textContent='ひとくちメモ：';
+    pointEl.appendChild(b1); pointEl.appendChild(document.createTextNode(item[1]));
+    recipeEl.innerHTML='';
+    var b2=document.createElement('b'); b2.textContent='簡単な一品：';
+    recipeEl.appendChild(b2); recipeEl.appendChild(document.createTextNode(item[2]));
+    voiceEl.textContent = VOICES[dayOfYear(now) % VOICES.length];
+    var key = 'omupan-shishoku-' + now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
+    function showDecided(){
+      btn.textContent = '今日は「' + item[0] + '」にきめた！🍙';
+      btn.classList.add('decided');
+    }
+    try{ if(localStorage.getItem(key)==='1') showDecided(); }catch(e){}
+    btn.addEventListener('click', function(){
+      try{ localStorage.setItem(key,'1'); }catch(e){}
+      showDecided();
+    });
+  })();
+  </script>
+  <!-- ▲▲ 今日の試食 ここまで ▲▲ -->
+
   <section class="hero reveal" aria-label="おむすびぱんだ メインビジュアル">
     <h1 id="heroTitle" class="name-title" data-ja="おむすびぱんだ" data-en="Omusubi Panda">おむすびぱんだ<span>🍙🐼</span></h1>
     <div style="display:block;width:100%;text-align:center;margin-top:6px;">
@@ -5672,7 +5602,7 @@ const OMP_FOOD_LIST = [
 
   // Stars
   const starsEl = document.getElementById('stars');
-  for (let i = 0; i < 40; i++) {
+  for (let i = 0; starsEl && i < 40; i++) {
     const s = document.createElement('div');
     s.className = 'star';
     s.style.cssText = `
@@ -5722,8 +5652,7 @@ const OMP_FOOD_LIST = [
     decoEl.appendChild(d);
     setTimeout(() => d.remove(), (dur + Math.abs(delay)) * 1000);
   }
-  for(let i=0;i<50;i++) spawnDecoAt(Math.random()*120 - 10);
-  setInterval(spawnDeco, 1166);
+  /* 浮遊デコレーション生成は2026-11-22に停止（軽量化・こっそり整理） */
 
   // ── 流れ星🌟／UFO🛸 が時々ランダムな方向へ画面を横切る ──
   (function() {
@@ -9797,7 +9726,7 @@ const OMP_FOOD_LIST = [
       <button class="diary-panel-close" onclick="closeDiary()">✕</button>
     </div>
     <div style="text-align:center;margin-bottom:12px;position:relative;">
-      <img id="diaryIllust" src="Diary.png" alt="地球日記ぱんだ" style="width:240px;height:auto;cursor:pointer;" onclick="onIllustTap('diaryIllust', 'diary')">
+      <img id="diaryIllust" loading="lazy" src="Diary.png" alt="地球日記ぱんだ" style="width:240px;height:auto;cursor:pointer;" onclick="onIllustTap('diaryIllust', 'diary')">
     </div>
     <div class="diary-entries" id="diaryEntries"></div>
     <div style="text-align:center; padding: 12px 0 4px;">
@@ -9821,7 +9750,7 @@ const OMP_FOOD_LIST = [
       <button class="diary-panel-close" onclick="closeSnews()">✕</button>
     </div>
     <div style="text-align:center;margin-bottom:12px;position:relative;">
-      <img id="snewsIllust" src="News.png" alt="宇宙NEWSぱんだ" style="width:240px;height:auto;cursor:pointer;" onclick="onIllustTap('snewsIllust', 'snews')">
+      <img id="snewsIllust" loading="lazy" src="News.png" alt="宇宙NEWSぱんだ" style="width:240px;height:auto;cursor:pointer;" onclick="onIllustTap('snewsIllust', 'snews')">
     </div>
     <div class="diary-entries" id="snewsEntries"></div>
     <div style="text-align:center; padding: 12px 0 4px;">
@@ -9853,7 +9782,7 @@ const OMP_FOOD_LIST = [
 
     <!-- 地球調査書 キャラクター画像（hubのみ表示） -->
     <div id="chosaHubImg" style="text-align:center; margin-bottom:4px;">
-      <img src="research.png" alt="地球調査書キャラクター" style="width:min(200px,55vw); height:auto; display:inline-block; filter:drop-shadow(0 4px 12px rgba(61,107,53,0.18));">
+      <img src="research.png" loading="lazy" alt="地球調査書キャラクター" style="width:min(200px,55vw); height:auto; display:inline-block; filter:drop-shadow(0 4px 12px rgba(61,107,53,0.18));">
       <div style="margin-top:6px; margin-bottom:8px; font-size:0.97rem; font-weight:700; color:#5a7a3a; line-height:1.6; letter-spacing:0.03em;">
         <span data-ja="ぼくが調べた調査書だよ" data-en="These are my research notes!">ぼくが調べた調査書だよ</span><br>
         <span data-ja="一緒に見てみよう📖✏" data-en="Let's explore together 📖✏">一緒に見てみよう📖✏</span>
@@ -9896,7 +9825,7 @@ const OMP_FOOD_LIST = [
     <!-- 階層2: 分野カテゴリ一覧 -->
     <div class="chosa-screen" id="chosaCategories" style="display:none;">
       <div style="text-align:center; margin-bottom:10px;">
-        <img id="chosaBookImg" src="" alt="" style="width:min(180px,50vw); height:auto; display:inline-block; filter:drop-shadow(0 4px 12px rgba(61,107,53,0.18));">
+        <img id="chosaBookImg" loading="lazy" src="" alt="" style="width:min(180px,50vw); height:auto; display:inline-block; filter:drop-shadow(0 4px 12px rgba(61,107,53,0.18));">
         <div style="margin-top:6px; font-size:0.95rem; font-weight:700; color:#5a7a3a; letter-spacing:0.03em;">
           <span data-ja="好きな調査書をのぞいてみてね🍙🐼" data-en="Pick a notebook to explore 🍙🐼">好きな調査書をのぞいてみてね🍙🐼</span>
         </div>
@@ -10040,7 +9969,7 @@ const OMP_FOOD_LIST = [
     <!-- 難易度選択 -->
     <div id="refBookHub">
       <div style="text-align:center;margin-bottom:14px;">
-        <img src="Quiz.png" alt="参考書" style="width:min(160px,45vw);height:auto;display:inline-block;filter:drop-shadow(0 4px 12px rgba(61,107,53,0.18));">
+        <img src="Quiz.png" loading="lazy" alt="参考書" style="width:min(160px,45vw);height:auto;display:inline-block;filter:drop-shadow(0 4px 12px rgba(61,107,53,0.18));">
       </div>
       <p id="refBookDesc" style="text-align:center;font-size:0.82rem;color:#666;margin-bottom:16px;line-height:1.7;">50問のトピックを読んで学べるよ📡<br>カテゴリを選んでね🌌</p>
       <div style="display:flex;flex-direction:column;gap:12px;">
@@ -10115,7 +10044,7 @@ const OMP_FOOD_LIST = [
     <!-- 画面0: book選択（自然 / 人間） -->
     <div id="cqScreenBook">
       <div style="text-align:center;margin-bottom:14px;">
-        <img src="Earthquiz.png" alt="地球クイズ" style="width:min(150px,42vw);height:auto;display:inline-block;filter:drop-shadow(0 4px 12px rgba(200,160,30,0.2));">
+        <img src="Earthquiz.png" loading="lazy" alt="地球クイズ" style="width:min(150px,42vw);height:auto;display:inline-block;filter:drop-shadow(0 4px 12px rgba(200,160,30,0.2));">
       </div>
       <p id="cqDesc" style="text-align:center;font-size:1rem;color:#2a2a2a;font-weight:800;margin-bottom:16px;line-height:1.7;">
         調査書からクイズを出題✏️<br>好きな分野を選んでね📕
@@ -10135,7 +10064,7 @@ const OMP_FOOD_LIST = [
     <!-- 画面1: 分野選択 -->
     <div id="cqScreenCat" style="display:none;">
       <div style="text-align:center;margin-bottom:10px;">
-        <img id="cqBookImg" src="" alt="" style="width:min(150px,42vw);height:auto;display:inline-block;filter:drop-shadow(0 4px 12px rgba(200,160,30,0.2));">
+        <img id="cqBookImg" loading="lazy" src="" alt="" style="width:min(150px,42vw);height:auto;display:inline-block;filter:drop-shadow(0 4px 12px rgba(200,160,30,0.2));">
       </div>
       <div class="chosa-cat-grid" id="cqCatGrid"></div>
     </div>
@@ -21250,5 +21179,30 @@ document.getElementById('touchponOverlay').addEventListener('contextmenu', funct
 })();
 </script>
 
+
+<!-- ▼ こっそり使いやすさ改善パッチ（2026-11-22：見た目・世界観はそのまま） ▼ -->
+<style id="usabilityPatchStyle">
+  html, body { overflow-x: hidden; }
+  body { line-height: 1.6; }
+  /* 閉じるボタンは48px以上＋濃い色に */
+  .diary-panel-close, .share-panel-close { min-width:48px; min-height:48px; width:48px; height:48px; padding:0; color:#595959; }
+  .stamp-modal-close, .photo-panel-close { width:48px; height:48px; min-width:48px; min-height:48px; }
+  .cam-close-btn { width:48px; height:48px; }
+  .wish-panel-close-x { width:48px; height:48px; top:4px; right:4px; }
+  /* 主なボタンはタップ領域48px以上に */
+  .nav-btn, .more-tab-btn, .diary-home-btn, .btn-primary, .wish-close-btn, .mem-home-btn,
+  .tp-btn-primary, .tp-btn-secondary, .chosa-nav-btn, .talk-send-btn, .feed-btn, .pwa-close-btn,
+  .chosa-mini-btn, .diary-mini-btn, .snews-mini-btn, .photo-mini-btn, .memory-mini-btn, .oni-mini-btn,
+  .wish-btn, .chosa-book-btn, .stamp-select-btn, .card-share-btn, .share-icon-btn,
+  .btn-home-quiz, .btn-hall-challenge, .btn-hall-list, .dl-btn, .diary-panel-back, .chosa-jump-btn,
+  .memory-mini-btn, .wish-submit-btn, .btn-full { min-height:48px; }
+  /* ゲージまわりの小さい文字を16pxに */
+  .gauge-label, .gauge-pct, .panda-mood-label { font-size:16px; }
+  /* 主画面で常時うごく演出を止める（操作に紐づく動きは残す） */
+  #wakuwakuTitle { animation: none !important; }
+  .sparkle { animation: none !important; }
+  [style*="diaryInnerNewPulse"] { animation: none !important; }
+</style>
+<!-- ▲ こっそり使いやすさ改善パッチ ここまで ▲ -->
 </body>
 </html>
