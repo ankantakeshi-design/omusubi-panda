@@ -16639,6 +16639,15 @@ function gameLiteOff() {
   var openStack=[];        /* 開いている要素（開いた順） */
   var sentinel=false;      /* 自分が積んだ履歴が有効か */
   var selfBack=false;      /* 自分で history.back() した直後の popstate を無視する */
+  /* 旧ハッシュ方式（#quiz 等）が管理するオーバーレイは監視対象外にする。
+     両方式が二重に履歴を積むと、閉じた直後の history.back() が #quiz 付きの
+     エントリに戻り、旧方式の popstate が「開く」と解釈して再表示ループになる。 */
+  var LEGACY={quizOverlay:1,diaryOverlay:1,snewsOverlay:1,chosaOverlay:1,chosaQuizOverlay:1,refBookOverlay:1,digitalEhonOverlay:1};
+  var legacyDirty=false;   /* 旧方式オーバーレイ表示中に積まれたセンチネルがある */
+  function legacyAnyOpen(){
+    for(var id in LEGACY){ var el=document.getElementById(id); if(el&&isOpen(el)) return true; }
+    return false;
+  }
   var inPop=false;         /* popstate 処理中 */
   var timer=null;
 
@@ -16654,24 +16663,33 @@ function gameLiteOff() {
   function depth(el){ var d=0; while(el&&el.parentElement){ d++; el=el.parentElement; } return d; }
   function scan(){
     var els=document.querySelectorAll(SEL), now=[], i, el;
-    for(i=0;i<els.length;i++){ if(isOpen(els[i])) now.push(els[i]); }
+    for(i=0;i<els.length;i++){ el=els[i]; if(el.id&&LEGACY[el.id]) continue; if(isOpen(el)) now.push(el); }
     /* 新しく開いたものをスタックへ（深い要素を後＝上にする） */
     var fresh=now.filter(function(e){ return openStack.indexOf(e)<0; });
     fresh.sort(function(a,b){ return depth(a)-depth(b); });
     openStack=openStack.filter(function(e){ return now.indexOf(e)>=0; });
     for(i=0;i<fresh.length;i++) openStack.push(fresh[i]);
-    try{ if(document.body) document.body.classList.toggle('omp-pop-open',openStack.length>0); }catch(e){}
+    try{ if(document.body) document.body.classList.toggle('omp-pop-open',openStack.length>0||legacyAnyOpen()); }catch(e){}
     return openStack.length;
   }
   function schedule(){ if(timer) return; timer=setTimeout(function(){ timer=null; reconcile(); },60); }
   function reconcile(){
     if(inPop) return;
     var n=scan();
+    /* 旧方式オーバーレイが開いている間は履歴を一切触らない（旧方式が自分の履歴を管理する） */
+    if(legacyAnyOpen()){
+      if(sentinel) legacyDirty=true;
+      return;
+    }
     if(n>0 && !sentinel){
-      try{ history.pushState({__ompPop:1},''); sentinel=true; }catch(e){}
+      try{ history.pushState({__ompPop:1},'',location.pathname+(location.search||'')); sentinel=true; }catch(e){}
     }else if(n===0 && sentinel){
+      sentinel=false;
+      /* 旧方式オーバーレイと重なっていたセンチネルは back() で戻さない
+         （戻ると #quiz 等のエントリに着地し、旧方式が再表示してしまうため） */
+      if(legacyDirty){ legacyDirty=false; return; }
       /* 画面操作で全部閉じられた → 積んだ履歴を自分で戻して整合させる */
-      sentinel=false; selfBack=true;
+      selfBack=true;
       try{ history.back(); }catch(e){ selfBack=false; }
       setTimeout(function(){ selfBack=false; },400);
     }
@@ -16710,7 +16728,7 @@ function gameLiteOff() {
       inPop=false;
       var n=scan();
       if(n===0){ try{ document.body.style.overflow=''; }catch(e){} }
-      else if(!sentinel){ try{ history.pushState({__ompPop:1},''); sentinel=true; }catch(e){} }
+      else if(!sentinel){ try{ history.pushState({__ompPop:1},'',location.pathname+(location.search||'')); sentinel=true; }catch(e){} }
     },350);
   });
   var mo=new MutationObserver(schedule);
