@@ -3479,69 +3479,34 @@
     <div class="panda-message-area" id="pandaMsgArea">
       <div class="panda-msg-bubble" id="pandaMsgBubble">…</div>
       <div id="talkFriendBadge" class="no-wobble" style="text-align:center;font-size:0.76rem;font-weight:700;color:#7aaa5a;letter-spacing:0.03em;margin:2px 0 2px;opacity:0.9;min-height:1.2em;"></div>
-      <div style="text-align:center;margin:0 0 6px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;width:100%;box-sizing:border-box;margin:0 0 6px;">
         <button type="button" class="no-wobble" id="talkNicknameBtn" onclick="tpEditNickname()"
-          style="background:none;border:none;font-size:0.72rem;color:#6a4a78;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:2px 6px;"
+          style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(150,120,160,0.4);border-radius:999px;font-size:0.8rem;color:#6a4a78;font-weight:700;cursor:pointer;padding:6px 4px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;width:100%;box-sizing:border-box;"
           data-ja="✏️ よびかたをきめる" data-en="✏️ Set your nickname">✏️ よびかたをきめる</button>
         <button type="button" class="no-wobble" id="talkAikotobaBtn" onclick="tpOpenAikotobaModal()"
-          style="background:none;border:none;font-size:0.72rem;color:#6a4a78;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:2px 6px;"
+          style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(150,120,160,0.4);border-radius:999px;font-size:0.8rem;color:#6a4a78;font-weight:700;cursor:pointer;padding:6px 4px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;width:100%;box-sizing:border-box;"
           data-ja="🤲あいことば" data-en="🤲 Secret words">🤲あいことば</button>
         <button type="button" class="no-wobble" id="talkBackupBtn" onclick="tpOpenBackupModal()"
-          style="background:none;border:none;font-size:0.72rem;color:#6a4a78;font-weight:700;text-decoration:underline;text-underline-offset:2px;cursor:pointer;padding:2px 6px;"
+          style="background:rgba(255,255,255,0.7);border:1.5px solid rgba(150,120,160,0.4);border-radius:999px;font-size:0.8rem;color:#6a4a78;font-weight:700;cursor:pointer;padding:6px 4px;min-height:48px;display:flex;align-items:center;justify-content:center;text-align:center;width:100%;box-sizing:border-box;"
           data-ja="💾バックアップ" data-en="💾 Backup">💾バックアップ</button>
       </div>
       
-      <div style="margin-top:8px;display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;box-sizing:border-box;">
-        
-        <button class="feed-btn" id="feedBtnTop" onclick="feedPanda(); launchEmoji(this, 'food')" style="width:100%;margin:0;justify-content:center;font-size:0.85rem;padding:6px 10px;min-height:36px;">
+      <div style="margin-top:8px;width:100%;box-sizing:border-box;">
+        <button class="feed-btn" id="feedBtnTop" onclick="feedPanda(); launchEmoji(this, 'food')" style="width:100%;margin:0;justify-content:center;font-size:1rem;padding:12px 10px;min-height:52px;">
           <span class="btn-emoji">🍽️</span><span data-ja="ごはんをあげる" data-en="Feed the panda">ごはんをあげる</span>
         </button>
       </div>
 
       <div id="moreMenuTrigger" style="margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;box-sizing:border-box;">
-        <button id="btn-play" class="oni-mini-btn" onclick="openMoreMenu(); switchMoreTab('play');" style="justify-content:center;width:100%;" data-ja="🎮 あそぶ" data-en="🎮 Play">🎮 あそぶ</button>
-        <button id="btn-read" class="diary-mini-btn" onclick="openMoreMenu(); switchMoreTab('read');" style="justify-content:center;width:100%;gap:4px;"><span id="new-badge-yomu" style="font-size:1.1em;font-weight:bold;animation:newBlink 2s ease-in-out infinite;line-height:1;">NEW</span><span data-ja="📖 よむ" data-en="📖 Read">📖 よむ</span></button>
+        <button id="btn-play" class="oni-mini-btn" onclick="openMoreMenu(); switchMoreTab('play');" style="justify-content:center;width:100%;min-height:52px;font-size:0.95rem;padding:12px 10px;" data-ja="🎮 あそぶ" data-en="🎮 Play">🎮 あそぶ</button>
+        <button id="btn-read" class="diary-mini-btn" onclick="openMoreMenu(); switchMoreTab('read');" style="justify-content:center;width:100%;gap:4px;min-height:52px;font-size:0.95rem;padding:12px 10px;"><span id="new-badge-yomu" style="font-size:1.1em;font-weight:bold;animation:newBlink 2s ease-in-out infinite;line-height:1;">NEW</span><span data-ja="📖 よむ" data-en="📖 Read">📖 よむ</span></button>
         
       </div>
       <div style="text-align:right;margin-top:4px;">
         <span style="font-size:0.94rem;color:#555;">Created by <a href="https://lit.link/aitakeshi" target="_blank" rel="noopener" style="color:#555;">Takechan</a></span>
       </div>
 
-      <div class="hero-actions">
-        <div class="panda-status-outer">
-          <!-- 状態連動イラスト（枠の外・左） -->
-          <div class="panda-status-illust" id="statusPandaWrap" onclick="onStatusPandaTap(event)">
-            <img id="statusPandaImg" src="panda_happy.webp" alt="おむすびぱんだ">
-            <div id="statusMoodEn" style="
-              font-size:0.72rem;
-              font-weight:700;
-              color:#7aaa5a;
-              opacity:0.75;
-              letter-spacing:0.03em;
-              display:none;
-            ">Happy</div>
-          </div>
-        <div class="panda-status-wrap" id="pandaStatusWrap">
-          <!-- ゲージ類 -->
-          <div class="panda-status-gauges">
-          <div class="status-title-row">
-            <span class="panda-mood-label" id="moodLabel">😊 ごきげん</span>
-          </div>
-          <div class="gauge-row">
-            <span class="gauge-icon">🍚</span>
-            <span class="gauge-label" data-ja="満腹度" data-en="Fullness">満腹度</span>
-            <div class="gauge-track">
-              <div class="gauge-fill gauge-fill-food" id="foodGaugeFill" style="width:70%"></div>
-            </div>
-            <span class="gauge-pct" id="foodPct">70%</span>
-          </div>
-
-          </div><!-- /panda-status-gauges -->
-        </div><!-- /panda-status-wrap -->
-        </div><!-- /panda-status-outer -->
-      </div>
-
-        <p style="text-align:center;font-family:'Zen Maru Gothic',sans-serif;font-size:1.05rem;font-weight:900;color:#7aaa5a;margin:26px 12px 10px;">この子、だれだと思う？🐼</p>
+<p style="text-align:center;font-family:'Zen Maru Gothic',sans-serif;font-size:1.05rem;font-weight:900;color:#7aaa5a;margin:26px 12px 10px;">この子、だれだと思う？🐼</p>
 
   <!-- TRAITS CARD -->
   <article class="card reveal" style="transition-delay: 0.2s;" aria-label="おむすびぱんだって？">
@@ -4492,7 +4457,7 @@ document.getElementById('pwaOverlay').addEventListener('click', function(e) {
           <span style="font-size:0.65rem;flex-shrink:0;">▾</span>
         </summary>
         <div style="font-size:0.78rem;color:#bbb;line-height:1.7;padding:6px 0 2px;" itemscope itemprop="acceptedAnswer" itemtype="https://schema.org/Answer">
-          <div itemprop="text" data-ja="満腹度ゲージが上がり、ぱんだの表情が変わります。ごはんをあげるたびに喜んでくれるよ🍙" data-en="The fullness gauge rises and the panda's expression changes. Feed them and watch them react! 🍙">満腹度ゲージが上がり、ぱんだの表情が変わります。ごはんをあげるたびに喜んでくれるよ🍙</div>
+          <div itemprop="text" data-ja="ぱんだの表情が変わります。ごはんをあげるたびに喜んでくれるよ🍙" data-en="The fullness gauge rises and the panda's expression changes. Feed them and watch them react! 🍙">ぱんだの表情が変わります。ごはんをあげるたびに喜んでくれるよ🍙</div>
         </div>
       </details>
 
@@ -4739,7 +4704,7 @@ document.getElementById('pwaOverlay').addEventListener('click', function(e) {
       "name": "ごはんをあげるとどうなりますか？",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "満腹度ゲージが上がり、ぱんだの表情が変わります。ごはんをあげるたびに喜んでくれるよ🍙"
+        "text": "ぱんだの表情が変わります。ごはんをあげるたびに喜んでくれるよ🍙"
       }
     },
     {
@@ -6080,9 +6045,9 @@ const OMP_FOOD_LIST = [
     const foodPct = Math.round(s.food);
     const mood = getMood(s.food);
 
-    document.getElementById('foodGaugeFill').style.width = foodPct + '%';
-    document.getElementById('foodPct').textContent = foodPct + '%';
-    document.getElementById('moodLabel').textContent = getMoodLabel(mood);
+    var gfEl=document.getElementById('foodGaugeFill'); if (gfEl) gfEl.style.width = foodPct + '%';
+    var fpEl=document.getElementById('foodPct'); if (fpEl) fpEl.textContent = foodPct + '%';
+    var mlEl=document.getElementById('moodLabel'); if (mlEl) mlEl.textContent = getMoodLabel(mood);
     updateFoodStatusMsg(s.food);
 
     // パンダ画像切り替え（ステータス枠内の小イラスト）
