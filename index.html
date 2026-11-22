@@ -596,36 +596,6 @@
     animation: emojiFly 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
     will-change: transform, opacity;
   }
-  /* ランダムぷるぷる（生き物みたいに） */
-  @keyframes pururuRandom {
-    0%   { transform: rotate(0deg) scale(1); }
-    12%  { transform: rotate(-9deg) scale(1.16); }
-    28%  { transform: rotate(9deg) scale(1.18); }
-    44%  { transform: rotate(-8deg) scale(1.15); }
-    60%  { transform: rotate(7deg) scale(1.14); }
-    75%  { transform: rotate(-5deg) scale(1.1); }
-    88%  { transform: rotate(3deg) scale(1.05); }
-    100% { transform: rotate(0deg) scale(1); }
-  }
-  .pururu-auto {
-    animation: pururuRandom 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
-  }
-  /* ボタン全般には `button[class*="btn"] { animation: wobbleCycle ... !important }` という
-     ルールが後ろ(3064行目付近)にあり、詳細度が `.pururu-auto` より高いため、上のルールだけでは
-     負けてしまい、ぷるぷるが常に小さい常時ジッターに上書きされて「動いていないように見える」
-     原因になっていた。対象になりうる全ボタンについて、同じセレクタに.pururu-autoを足して
-     詳細度を確実に上回らせて優先させる。 */
-  button.pururu-auto,
-  a.nav-btn.pururu-auto,
-  .sns-btn.pururu-auto,
-  .pwa-tab.pururu-auto,
-  .panel-link-btn.pururu-auto,
-  a[class*="btn"].pururu-auto,
-  button[class*="btn"].pururu-auto,
-  .mode-btn.pururu-auto {
-    animation: pururuRandom 0.7s cubic-bezier(0.36, 0.07, 0.19, 0.97) !important;
-  }
-
   @keyframes pururu {
     0%   { transform: rotate(0deg) scale(1.05); }
     20%  { transform: rotate(-4deg) scale(1.07); }
@@ -3119,180 +3089,7 @@
 }
 
 </style>
-<style id="wobbleStyles">
 
-  /* OSの「モーション低減（Remove animations）」設定がONでも、ここの「ぷるぷる」は
-     もともと酔わないよう振れ幅をごく小さく調整済みのものなので、常に動かす（全体ロックしない） */
-  /* ぷるぷる震え（酔いにくい）を基本に：大きな回転・傾きは廃止し、微小な位置ジッターのみをループ */
-  @keyframes wobbleCycle {
-    0%,100%  { transform: translate(0,0) rotate(0deg); }
-    8%       { transform: translate(-0.6px,0.4px) rotate(-0.4deg); }
-    16%      { transform: translate(0.5px,-0.5px) rotate(0.35deg); }
-    24%      { transform: translate(-0.4px,-0.3px) rotate(-0.3deg); }
-    32%      { transform: translate(0.6px,0.3px) rotate(0.4deg); }
-    40%      { transform: translate(0,0) rotate(0deg); }
-    50%      { transform: translate(-0.5px,0.4px) rotate(-0.35deg); }
-    58%      { transform: translate(0.4px,-0.4px) rotate(0.3deg); }
-    66%      { transform: translate(-0.3px,0.3px) rotate(-0.25deg); }
-    74%      { transform: translate(0.3px,-0.2px) rotate(0.2deg); }
-    82%      { transform: translate(-0.2px,0.2px) rotate(-0.15deg); }
-    90%      { transform: translate(0,0) rotate(0deg); }
-  }
-
-  /* ===== 動くのがデフォルト：中身が「葉っぱ」の要素（テキスト・画像）はぜんぶ対象 ===== */
-  /* タッチぽんはプレイ中に絵文字・エフェクトを毎秒何個も追加/削除するため、
-     :has()や:nth-childを含むこの巨大なセレクタが毎回再評価されると重くなる。
-     ゲームオーバーレイ全体をこの「ぷるぷる」システムの対象外にする。 */
-  body :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(.no-wobble):not([class*="overlay"]):not([id*="Overlay"]):not([id*="overlay"]):not([class*="curtain"]):not(main):not(header):not(footer):not(nav):not(.deco-item):not(.deco-bg):not(.sparkle):not(#bubbleLayer):not(.soap-bubble):not(.bubble-shard):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(.diary-entries):not(.diary-entries *):not(.diary-entry):not(.diary-entry *):not(#pickupDiaryContent):not(#pickupDiaryContent *):not(#pickupStudyContent):not(#pickupStudyContent *):not(#pickupSnewsContent):not(#pickupSnewsContent *):not(#chosaEntries):not(#chosaEntries *):not(#refArticleContent):not(#refArticleContent *):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *):not(:has(> :not(br))) {
-    animation: wobbleCycle 3.6s ease-in-out infinite;
-    transform-origin: 50% 60%;
-    will-change: transform;
-  }
-  /* 内側にアイコン用spanなどを持つボタン類も、ひとかたまりとして必ずゆらす */
-  /* display上書きは各ボタンのflex/inline-flexレイアウト（アイコン+文字の中央揃え）を崩すため削除 */
-  /* タッチぽん・神経衰弱プレイ中のボタン（はじめる/難易度選択/やめる等）は、
-     上の body :not(...) ルールでは除外されているのに、このボタン専用ルールだけ
-     除外し忘れていて常にガタガタ揺れ続けていた。ここでも除外する。 */
-  button:not(#touchponOverlay button):not(#memoryOverlay button),
-  a.nav-btn:not(#touchponOverlay a.nav-btn):not(#memoryOverlay a.nav-btn),
-  .sns-btn:not(#touchponOverlay .sns-btn):not(#memoryOverlay .sns-btn),
-  .pwa-tab:not(#touchponOverlay .pwa-tab):not(#memoryOverlay .pwa-tab),
-  .panel-link-btn:not(#touchponOverlay .panel-link-btn):not(#memoryOverlay .panel-link-btn),
-  a[class*="btn"]:not(#touchponOverlay a[class*="btn"]):not(#memoryOverlay a[class*="btn"]),
-  button[class*="btn"]:not(#touchponOverlay button[class*="btn"]):not(#memoryOverlay button[class*="btn"]),
-  .mode-btn:not(#touchponOverlay .mode-btn):not(#memoryOverlay .mode-btn) {
-    animation: wobbleCycle 3.6s ease-in-out infinite !important;
-    transform-origin: 50% 60%;
-  }
-
-  /* リズムをバラバラにする（要素の並び順でduration/delayをランダム風にズラし、全要素が同時に震えて見えないようにする） */
-  body :nth-child(2n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 3.1s; animation-delay: -0.6s; }
-  body :nth-child(3n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 4.1s; animation-delay: -1.9s; }
-  body :nth-child(4n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 2.8s; animation-delay: -0.3s; }
-  body :nth-child(5n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 4.5s; animation-delay: -1.5s; }
-  body :nth-child(6n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 3.9s; animation-delay: -2.4s; }
-  body :nth-child(7n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 2.5s; animation-delay: -1.0s; }
-  body :nth-child(8n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 4.3s; animation-delay: -2.9s; }
-  body :nth-child(9n):not(.deco-item):not(.sparkle):not(.soap-bubble):not(.bubble-shard):not(#bubbleLayer):not(.pile-item):not(.burst-piece):not(.emoji-burst):not(.illust-tap-fx):not(.omp-burst):not(.confetti-piece):not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *)   { animation-duration: 3.3s; animation-delay: -0.9s; }
-  /* 日記・調査書・スタディなどの読みもの本文専用：振れ幅30%（70%減）・速度50%（2倍ゆっくり） */
-  @keyframes wobbleCycleTextSlow {
-    0%,100%  { transform: translate(0,0) rotate(0deg); }
-    8%       { transform: translate(-0.18px,0.12px) rotate(-0.12deg); }
-    16%      { transform: translate(0.15px,-0.15px) rotate(0.1deg); }
-    24%      { transform: translate(-0.12px,-0.09px) rotate(-0.09deg); }
-    32%      { transform: translate(0.18px,0.09px) rotate(0.12deg); }
-    40%      { transform: translate(0,0) rotate(0deg); }
-    50%      { transform: translate(-0.15px,0.12px) rotate(-0.1deg); }
-    58%      { transform: translate(0.12px,-0.12px) rotate(0.09deg); }
-    66%      { transform: translate(-0.09px,0.09px) rotate(-0.07deg); }
-    74%      { transform: translate(0.09px,-0.06px) rotate(0.06deg); }
-    82%      { transform: translate(-0.06px,0.06px) rotate(-0.04deg); }
-    90%      { transform: translate(0,0) rotate(0deg); }
-  }
-  @keyframes wobbleCycleNoRotate {
-    0%,100%  { transform: translate(0,0); }
-    8%       { transform: translate(-0.6px,0.4px); }
-    16%      { transform: translate(0.5px,-0.5px); }
-    24%      { transform: translate(-0.4px,-0.3px); }
-    32%      { transform: translate(0.6px,0.3px); }
-    40%      { transform: translate(0,0); }
-    50%      { transform: translate(-0.5px,0.4px); }
-    58%      { transform: translate(0.4px,-0.4px); }
-    66%      { transform: translate(-0.3px,0.3px); }
-    74%      { transform: translate(0.3px,-0.2px); }
-    82%      { transform: translate(-0.2px,0.2px); }
-    90%      { transform: translate(0,0); }
-  }
-  .diary-entries,
-  .diary-entry,
-  #pickupDiaryContent,
-  #pickupStudyContent,
-  #pickupSnewsContent {
-    animation: wobbleCycleNoRotate 3.6s ease-in-out infinite !important;
-    animation-delay: 0s !important;
-    transform-origin: 50% 60%;
-  }
-
-  /* 自然調査書・人間調査書（#chosaEntries）／宇宙をスタディ（#refArticleContent）：
-     上のwobbleCycleTextSlowからさらに幅half・速度half（振れ幅15%・104s） */
-  @keyframes wobbleCycleTextSlower {
-    0%,100%  { transform: translate(0,0) rotate(0deg); }
-    8%       { transform: translate(-0.09px,0.06px) rotate(-0.06deg); }
-    16%      { transform: translate(0.08px,-0.08px) rotate(0.05deg); }
-    24%      { transform: translate(-0.06px,-0.05px) rotate(-0.05deg); }
-    32%      { transform: translate(0.09px,0.05px) rotate(0.06deg); }
-    40%      { transform: translate(0,0) rotate(0deg); }
-    50%      { transform: translate(-0.08px,0.06px) rotate(-0.05deg); }
-    58%      { transform: translate(0.06px,-0.06px) rotate(0.05deg); }
-    66%      { transform: translate(-0.05px,0.05px) rotate(-0.04deg); }
-    74%      { transform: translate(0.05px,-0.03px) rotate(0.03deg); }
-    82%      { transform: translate(-0.03px,0.03px) rotate(-0.02deg); }
-    90%      { transform: translate(0,0) rotate(0deg); }
-  }
-  /* 数学・自然調査書・人間調査書・宇宙をスタディなどの本文（#chosaEntries／#refArticleContent）は
-     文章が長く常時揺れ続けると酔いやすいため、ボタンと同じ「ふだんは静止・たまにぷるっと動く」
-     メリハリのある動きに変更（常時ループの小刻みな横揺れを廃止） */
-  @keyframes wobbleCycleRest {
-    0%, 85%, 100% { transform: translate(0,0) rotate(0deg); }
-    88%           { transform: translate(-0.6px,0.4px) rotate(-0.4deg); }
-    91%           { transform: translate(0.5px,-0.5px) rotate(0.35deg); }
-    94%           { transform: translate(-0.3px,0.3px) rotate(-0.2deg); }
-    97%           { transform: translate(0.15px,-0.15px) rotate(0.1deg); }
-  }
-  #chosaEntries,
-  #refArticleContent {
-    animation: wobbleCycleRest 6s ease-in-out infinite !important;
-    animation-delay: 0s !important;
-    transform-origin: 50% 60%;
-  }
-
-  /* クイズ系全般（宇宙クイズ #quizOverlay／地球クイズ #chosaQuizOverlay）の文章：
-     振れ幅30%（ぷるぷる震え、大きな傾きなし）・スピードは26sの遅いループ。ボタン・画像・SVGは対象外、通常のwobbleCycleのまま */
-  @keyframes wobbleCycleQuizText {
-    0%,100%  { transform: translate(0,0) rotate(0deg); }
-    8%       { transform: translate(-0.18px,0.12px) rotate(-0.12deg); }
-    16%      { transform: translate(0.15px,-0.15px) rotate(0.1deg); }
-    24%      { transform: translate(-0.12px,-0.09px) rotate(-0.09deg); }
-    32%      { transform: translate(0.18px,0.09px) rotate(0.12deg); }
-    40%      { transform: translate(0,0) rotate(0deg); }
-    50%      { transform: translate(-0.15px,0.12px) rotate(-0.1deg); }
-    58%      { transform: translate(0.12px,-0.12px) rotate(0.09deg); }
-    66%      { transform: translate(-0.09px,0.09px) rotate(-0.07deg); }
-    74%      { transform: translate(0.09px,-0.06px) rotate(0.06deg); }
-    82%      { transform: translate(-0.06px,0.06px) rotate(-0.04deg); }
-    90%      { transform: translate(0,0) rotate(0deg); }
-  }
-  #quizOverlay :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  #chosaQuizOverlay :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  #hallNameModal :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  #hallListModal :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  #hallFailModal :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  #cqHallNameModal :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  #cqHallListModal :not(script):not(style):not(br):not(input):not(textarea):not(select):not(option):not(link):not(meta):not(svg):not(path):not(img):not(.no-wobble):not(button):not([class*="btn"]):not(:has(> :not(br))),
-  /* 目次・選択肢・分野リストは<button>で作られているため、上のサイト全体button{...}ルールに
-     打ち勝つようID付きで明示指定（同じ!important同士なら詳細度の高い方が勝つ） */
-  #cqTocGrid button, #cqTocGrid button *,
-  #cqOptions button, #cqOptions button *,
-  #cqCatGrid button, #cqCatGrid button *,
-  #optionsWrap button, #optionsWrap button * {
-    animation: wobbleCycleQuizText 26s ease-in-out infinite !important;
-    animation-delay: 0s !important;
-  }
-
-  /* タッチぽん・神経衰弱のオーバーレイが開いている間（gameLiteOn〜gameLiteOff）は、
-     オーバーレイの外側は完全に隠れて見えないのに、サイト全体のほぼ全ボタン・
-     テキストにかかっているこの「ぷるぷる」(wobbleCycle系, will-change:transform付き)
-     が止まらず動き続けていた。gameLiteOn()のコメントには元々「ぷるぷる演出を止めて
-     CPU負荷を下げる」意図が書かれていたが、実装は背景デコレーション(deco-bg等)
-     だけしか止めておらず、この一番量が多いアニメーション群が対象から漏れていた。
-     見えていない間に動かしても意味がないので、ゲーム中は完全に停止させ、
-     タッチぽんの絵文字アニメーションとGPU/コンポジット資源を奪い合わないようにする。
-     （!important同士のため、:not()でID参照を2つ持たせて既存ルールより詳細度を
-     高くし、確実に上書きされるようにしている） */
-  body.game-open :not(#touchponOverlay):not(#touchponOverlay *):not(#memoryOverlay):not(#memoryOverlay *) {
-    animation: none !important;
-  }
-</style>
 </head>
 <body>
 
@@ -3996,7 +3793,7 @@
       <li><span class="onigiri">🍙</span><span data-ja="ぱんだの姿に似てるけどちょっとおむすびにもみえる" data-en="Looks a bit like a panda, but also a little like an onigiri 🍙🐼">ぱんだの姿に似てるけどちょっとおむすびにもみえる</span></li>
       <li><span class="onigiri">🍙</span><span data-ja="仲良しのおくさんと息子くんがいる" data-en="Has a beloved wife and son 🏠">仲良しのおくさんと息子くんがいる</span></li>
     </ul>
-    <img class="wobble-img" src="ompfamily.jpg" alt="おむすびぱんだのファミリー - おくさんと息子くん" style="width:100%;height:auto;border-radius:16px;display:block;margin-top:16px;" loading="lazy">
+    <img src="ompfamily.jpg" alt="おむすびぱんだのファミリー - おくさんと息子くん" style="width:100%;height:auto;border-radius:16px;display:block;margin-top:16px;" loading="lazy">
     <ul class="traits-list" style="display:none">
     </ul>
 
@@ -4022,7 +3819,7 @@
     <div style="text-align:center;margin:16px 0 8px;font-size:1.1rem;">
       ŧ‹"ŧ‹"(*´༥` *)ŧ‹"ŧ‹"🎋
     </div>
-    <img class="wobble-img" src="Sasa.jpg" alt="笹を食べるおむすびぱんだ - 地球の食べ物との出会い" style="width:100%;height:auto;border-radius:16px;display:block;" loading="lazy">
+    <img src="Sasa.jpg" alt="笹を食べるおむすびぱんだ - 地球の食べ物との出会い" style="width:100%;height:auto;border-radius:16px;display:block;" loading="lazy">
 
     <div class="story-text">
       <p style="text-align:center;" data-ja="んんん！？？？" data-en="Whaaat?!?!">んんん！？？？</p>
@@ -16710,70 +16507,7 @@ function gameLiteOff() {
       setTimeout(applyNewColor, 1000);
     })();
 
-    // ── ランダムぷるぷる（生き物みたいに） ──
-    (function() {
-      // サイト内の「ボタンらしきもの」を全部対象にする
-      // （デフォルトの微小ジッターをかけているセレクタと同じ範囲）
-      const BTN_SELECTOR = 'button, a.nav-btn, .sns-btn, .pwa-tab, .panel-link-btn, a[class*="btn"], button[class*="btn"], .mode-btn';
-      function getRandomBetween(min, max) { return min + Math.random() * (max - min); }
-      function isVisible(el) {
-        // 画面外（スクロールして見えていない）や非表示のボタンまで対象に含めると、
-        // 全ページ通しての抽選になって「今見えている画面では動いていない」ように
-        // 感じられてしまう。今実際に画面内に見えているものだけを対象にする。
-        const r = el.getBoundingClientRect();
-        if (r.width === 0 && r.height === 0) return false;
-        const vw = window.innerWidth, vh = window.innerHeight;
-        return r.bottom > 0 && r.right > 0 && r.top < vh && r.left < vw;
-      }
-
-      function schedulePururu() {
-        // 0.8〜2.5秒後にランダムでぷるぷる
-        const delay = getRandomBetween(800, 2500);
-        setTimeout(function() {
-          try {
-            // ゲーム中は画面下に隠れているボタンまで無駄に対象にしないよう、
-            // ここでスキップして負荷を抑える
-            if (document.body.classList.contains('game-open')) {
-              schedulePururu();
-              return;
-            }
-            const candidates = Array.prototype.filter.call(
-              document.querySelectorAll(BTN_SELECTOR),
-              el => !el.classList.contains('no-wobble') && isVisible(el)
-            );
-            if (candidates.length) {
-              // 画面内のボタン数が多いページほど、同時に動かす数を増やす
-              // （トップページのように5〜8個程度なら1個のまま、
-              //   ボタンがたくさん並ぶページでは2〜3個同時に動かす）
-              let count = 1;
-              if (candidates.length > 20) count = 3;
-              else if (candidates.length > 10) count = 2;
-              count = Math.min(count, candidates.length);
-
-              // 重複なくランダムにcount個選ぶ
-              const pool = candidates.slice();
-              for (let i = 0; i < count; i++) {
-                const idx = Math.floor(Math.random() * pool.length);
-                const el = pool.splice(idx, 1)[0];
-                el.classList.remove('pururu-auto');
-                // requestAnimationFrameの入れ子だと、タブが裏に回った時などに
-                // コールバックが呼ばれず永久に止まってしまうことがあるため、
-                // 強制リフローでアニメーションを再始動させる方式に変更
-                void el.offsetWidth;
-                el.classList.add('pururu-auto');
-                setTimeout(function() {
-                  try { el.classList.remove('pururu-auto'); } catch(e) {}
-                }, 750);
-              }
-            }
-          } catch (e) {
-            // ここで何が起きても、次のループは必ず継続させる
-          }
-          schedulePururu();
-        }, delay);
-      }
-      schedulePururu();
-    })();
+    
 
     // ── ページ読み込み時：URLにハッシュがあればそのオーバーレイを開く ─
     var rawInitHash = location.hash.toLowerCase();
@@ -16846,112 +16580,11 @@ function gameLiteOff() {
 
 
 
-<script>
-/* ===== 長文だけ「動かない」を明示的に指定する（動くのがCSS側のデフォルト） ===== */
-(function () {
-  var MAX_TEXT_LEN = 50; // これより長い文章はゆらさない（読みやすさ優先）
 
-  function markLongText(root) {
-    var all = root.querySelectorAll ? root.querySelectorAll('*') : [];
-    for (var i = 0; i < all.length; i++) {
-      var el = all[i];
-      if (el.classList.contains('no-wobble')) continue;
-      var text = (el.textContent || '').trim();
-      if (text.length > MAX_TEXT_LEN) el.classList.add('no-wobble');
-    }
-  }
 
-  markLongText(document);
 
-  // タッチぽん内で連続生成される演出用要素（絵文字・バースト片・スコア
-  // ポップ等）はプレイ中に大量にDOM追加/削除される。これらを毎回
-  // querySelectorAll('*')でスキャンするとプレイ時間が伸びるほど処理が
-  // 重くなり、フリーズの一因になっていたため対象から除外する。
-  function isTouchponNode(node) {
-    return node.id === 'touchponOverlay' || node.id === 'memoryOverlay' ||
-      (node.closest && node.closest('#touchponOverlay, #memoryOverlay'));
-  }
 
-  var observer = new MutationObserver(function (mutations) {
-    mutations.forEach(function (m) {
-      m.addedNodes.forEach(function (node) {
-        if (node.nodeType !== 1) return;
-        if (isTouchponNode(node)) return;
-        markLongText(node);
-      });
-    });
-  });
-  observer.observe(document.body, { childList: true, subtree: true });
-  window.__tpPausableObservers = window.__tpPausableObservers || [];
-  window.__tpPausableObservers.push({ obs: observer, target: document.body, opts: { childList: true, subtree: true } });
-})();
-</script>
 
-<script>
-/* ===== ボタン系の「ぷるぷる」を1つ1つ独立・ランダムにする =====
-   これまでは button 全体に同じ wobbleCycle 3.6s !important が当たっていたため、
-   近くにあるボタン同士がぴったり同じタイミングで揺れて「群れで震えてる」ように
-   見えていた。ここでは各ボタンごとにランダムなdurationとdelayをJSで直接指定し
-   （!importantで上書き）、1つ1つが自由にバラバラのリズムで震えるようにする。 */
-(function () {
-  var BTN_SELECTOR = 'button, a.nav-btn, .sns-btn, .pwa-tab, .panel-link-btn, a[class*="btn"], button[class*="btn"], .mode-btn';
-  var DUR_MIN = 2.4, DUR_MAX = 4.8; // 個体差をつけたduration幅（秒）
-
-  function randomizeOne(el) {
-    if (!el || el.dataset.wobbleRandomized === '1') return;
-    if (el.classList.contains('no-wobble')) return;
-    var dur = DUR_MIN + Math.random() * (DUR_MAX - DUR_MIN);
-    var delay = -(Math.random() * dur); // 開始位相もランダム（マイナスdelayで途中から再生）
-    el.style.setProperty('animation-duration', dur.toFixed(2) + 's', 'important');
-    el.style.setProperty('animation-delay', delay.toFixed(2) + 's', 'important');
-    el.dataset.wobbleRandomized = '1';
-  }
-
-  function randomizeAll(root) {
-    if (!root || !root.querySelectorAll) return;
-    // タッチぽんのゲーム演出要素（絵文字・エフェクト等）はボタンではなく、
-    // 大量かつ高頻度に生成されるため、ここでスキャンすると重くなる原因に
-    // なっていた。ゲームオーバーレイ配下は対象外にする。
-    if (root.id === 'touchponOverlay' || root.id === 'memoryOverlay' || (root.closest && root.closest('#touchponOverlay, #memoryOverlay'))) return;
-    if (root.matches && root.matches(BTN_SELECTOR)) randomizeOne(root);
-    var list = root.querySelectorAll(BTN_SELECTOR);
-    for (var i = 0; i < list.length; i++) randomizeOne(list[i]);
-  }
-
-  randomizeAll(document);
-
-  // クイズの選択肢・目次・分野リストなど、あとから動的に生成されるボタンにも対応
-  var btnObserver = new MutationObserver(function (mutations) {
-    mutations.forEach(function (m) {
-      m.addedNodes.forEach(function (node) {
-        if (node.nodeType !== 1) return;
-        randomizeAll(node);
-      });
-    });
-  });
-  btnObserver.observe(document.body, { childList: true, subtree: true });
-  window.__tpPausableObservers = window.__tpPausableObservers || [];
-  window.__tpPausableObservers.push({ obs: btnObserver, target: document.body, opts: { childList: true, subtree: true } });
-})();
-</script>
-
-<script>
-/* ===== ゲーム中は上記2つのobserverを完全に止める =====
-   isTouchponNode/closest チェックだけでもDOM追加のたびに走るため、
-   むずかしいモード等で演出要素が高頻度に生成されると積み重なって
-   負荷になる。プレイ中(body.game-open)は監視自体を止め、終了したら
-   再開することで、その分をまるごと削る。 */
-(function () {
-  var bodyClassObserver = new MutationObserver(function () {
-    var isGame = document.body.classList.contains('game-open');
-    (window.__tpPausableObservers || []).forEach(function (o) {
-      if (isGame) o.obs.disconnect();
-      else o.obs.observe(o.target, o.opts);
-    });
-  });
-  bodyClassObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] });
-})();
-</script>
 
 
 <!-- ▼ こっそり使いやすさ改善パッチ（2026-11-22：見た目・世界観はそのまま） ▼ -->
