@@ -3168,15 +3168,34 @@
     .gohan-cell.locked img{filter:brightness(0);opacity:.25;background:transparent;}
     .gohan-cell.locked .gname{color:#9e9e93;}
     .gohan-detail-img{display:block;width:min(300px,85%);height:auto;margin:4px auto 10px;border-radius:16px;}
+    .gohan-silhouette{filter:brightness(0);opacity:.25;}
+    .gohan-gacha-text{font-size:17px;line-height:1.7;color:#263238;margin:0 0 12px;}
+    .gohan-opened-note{font-size:15px;font-weight:700;color:#a85b12;margin:12px 0 0;}
+    .gohan-btn[disabled]{opacity:.6;cursor:default;}
+    @keyframes gohanShake{0%,100%{transform:rotate(0deg)}20%{transform:rotate(-4deg) translateX(-3px)}40%{transform:rotate(4deg) translateX(3px)}60%{transform:rotate(-3deg) translateX(-2px)}80%{transform:rotate(3deg) translateX(2px)}}
+    .gohan-shaking{animation:gohanShake .9s ease-in-out;}
+    @keyframes gohanPop{0%{transform:scale(.55);opacity:0}55%{transform:scale(1.07);opacity:1}100%{transform:scale(1);opacity:1}}
+    .gohan-pop{animation:gohanPop .45s ease-out;}
   </style>
   <section class="gohan-card" id="gohanCard" aria-label="今日のパンダごはん">
     <p class="gohan-label">🍱 今日のパンダごはん 🐼</p>
-    <h2 class="gohan-title">今日のごはんは、これ！</h2>
-    <img class="gohan-img" id="gohanImg" alt="今日のパンダごはん" width="370" height="320" decoding="async">
-    <p class="gohan-name" id="gohanName">よみこみ中…</p>
-    <p class="gohan-text" id="gohanComment"></p>
+    <div id="gohanGachaBox">
+      <h2 class="gohan-title">今日のごはんガチャ</h2>
+      <div id="gohanGachaStage">
+        <img class="gohan-img gohan-silhouette" id="gohanGachaImg" alt="今日のごはんはお楽しみ" width="370" height="320" decoding="async">
+      </div>
+      <p class="gohan-gacha-text">今日は、どんなごはんが出るかな？</p>
+      <button type="button" class="gohan-btn" id="gohanGachaBtn">🎁 ガチャを回す</button>
+    </div>
+    <div id="gohanOpenedBox" style="display:none">
+      <h2 class="gohan-title">今日のごはんは、これ！</h2>
+      <img class="gohan-img" id="gohanImg" alt="今日のパンダごはん" width="370" height="320" decoding="async">
+      <p class="gohan-name" id="gohanName">よみこみ中…</p>
+      <p class="gohan-text" id="gohanComment"></p>
+      <button type="button" class="gohan-btn" id="gohanRecipeBtn">🍳 レシピを見る</button>
+      <p class="gohan-opened-note">今日はもう開けたよ🐼 また明日も来てね</p>
+    </div>
     <p class="gohan-count" id="gohanCount"></p>
-    <button type="button" class="gohan-btn" id="gohanRecipeBtn">🍳 レシピを見る</button>
     <button type="button" class="gohan-sub-btn" id="gohanZukanBtn">📖 ごはん図鑑をひらく</button>
     <p class="gohan-note">毎日のごはんが、図鑑にあつまっていくよ🐼</p>
   </section>
@@ -15713,15 +15732,48 @@ function gameLiteOff() {
   function loadSet(){ try{ var a=JSON.parse(localStorage.getItem(LS_KEY)||'[]'); return Array.isArray(a)?a:[]; }catch(e){ return []; } }
   function saveSet(a){ try{ localStorage.setItem(LS_KEY, JSON.stringify(a)); }catch(e){} }
   var collected = loadSet();
-  if(collected.indexOf(today.id) < 0){ collected.push(today.id); saveSet(collected); }
   function extra(id){ return EXTRA[id] || {}; }
   function countText(){ return 'あつめたレシピ ' + collected.length + '／' + list.length; }
+  /* ガチャ開封状態：開封した日付（ローカル日付）を保存する */
+  var OPEN_KEY = 'omupan-gohan-gacha-v1';
+  function todayStr(){ var d=new Date(); function p(n){ return (n<10?'0':'')+n; } return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate()); }
+  function loadOpened(){ try{ return localStorage.getItem(OPEN_KEY)||''; }catch(e){ return ''; } }
+  function saveOpened(){ try{ localStorage.setItem(OPEN_KEY, todayStr()); }catch(e){} }
+  /* 開封状態は「その日にガチャを回したか」だけで管理する（収集済みかどうかは無関係）。
+     今朝の旧版で今日のごはんを見て収集済みの人でも、今日は未開封から始めて回して楽しめる。 */
+  var opened = (loadOpened() === todayStr());
   var img=document.getElementById('gohanImg'), nm=document.getElementById('gohanName'),
       cm=document.getElementById('gohanComment'), ct=document.getElementById('gohanCount');
-  if(img){ img.src=today.file; img.alt=today.name; }
-  if(nm) nm.textContent=today.name;
-  if(cm) cm.textContent=extra(today.id).c || '';
-  if(ct) ct.textContent=countText();
+  var gachaBox=document.getElementById('gohanGachaBox'), openedBox=document.getElementById('gohanOpenedBox'),
+      gachaImg=document.getElementById('gohanGachaImg'), gachaBtn=document.getElementById('gohanGachaBtn'),
+      gachaStage=document.getElementById('gohanGachaStage');
+  function renderOpened(pop){
+    if(img){ img.src=today.file; img.alt=today.name;
+      if(pop){ img.classList.remove('gohan-pop'); void img.offsetWidth; img.classList.add('gohan-pop'); } }
+    if(nm) nm.textContent=today.name;
+    if(cm) cm.textContent=extra(today.id).c || '';
+    if(ct) ct.textContent=countText();
+    if(gachaBox) gachaBox.style.display='none';
+    if(openedBox) openedBox.style.display='';
+  }
+  function renderGacha(){
+    if(gachaImg){ gachaImg.src=today.file; }
+    if(ct) ct.textContent=countText();
+    if(openedBox) openedBox.style.display='none';
+    if(gachaBox) gachaBox.style.display='';
+  }
+  if(opened){ renderOpened(false); } else { renderGacha(); }
+  if(gachaBtn) gachaBtn.addEventListener('click', function(){
+    if(opened || gachaBtn.disabled) return;
+    gachaBtn.disabled=true;
+    if(gachaStage){ gachaStage.classList.remove('gohan-shaking'); void gachaStage.offsetWidth; gachaStage.classList.add('gohan-shaking'); }
+    setTimeout(function(){
+      opened=true;
+      if(collected.indexOf(today.id) < 0){ collected.push(today.id); saveSet(collected); }
+      saveOpened();
+      renderOpened(true);
+    }, 950);
+  });
   function openGohanRecipe(id){
     var rec=extra(id); if(!rec.dish) return;
     var ov=document.getElementById('recipeOverlay'); if(!ov) return;
