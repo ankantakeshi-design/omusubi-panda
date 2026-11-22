@@ -8655,17 +8655,9 @@ const OMP_FOOD_LIST = [
   // 初回 or リピーター判定でメッセージ
   showPandaMsgEnhanced(pandaState.food, getVisitorMsg());
 
-  // 呼び方がまだ決まっていない人には、こちらから「よびかたをきめる」モーダルを
-  // 自動で開いて誘導する。ただし何度もしつこく出ると煩わしいので、
-  // 自動ポップアップは合計2回までに制限し、3回目以降は出さない
-  // （それでも決めたければ、いつでもボタンから手動で開ける）。
-  if (!_talkMem.name && (_talkMem.nicknamePromptCount || 0) < 2) {
-    _talkMem.nicknamePromptCount = (_talkMem.nicknamePromptCount || 0) + 1;
-    tpMemSave(_talkMem);
-    setTimeout(() => {
-      if (typeof tpEditNickname === 'function') tpEditNickname();
-    }, 1600);
-  }
+  // 「よびかたをきめる」モーダルの自動ポップアップは廃止（2026-11-22 ユーザー指示）。
+  // 起動時には出さず、決めたい人だけがボタンから手動で開ける。名前が未設定でも
+  // あいさつ等は名前なしで自然に表示される（getVisitorMsg / tpRenderFriendBadge で対応済み）。
 
   // 1分ごとに自動更新
   setInterval(() => {
