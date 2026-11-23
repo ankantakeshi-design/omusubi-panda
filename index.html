@@ -3078,6 +3078,9 @@
     .shishoku-btn.decided{background:#558b2f;}
     .shishoku-recipe-btn{display:block;width:100%;min-height:52px;margin-top:10px;padding:14px 16px;font-size:17px;font-weight:800;color:#2e7d32;background:#ffffff;border:2px solid #2e7d32;border-radius:999px;cursor:pointer;}
 .shishoku-swap-btn{display:block;width:100%;min-height:48px;margin-top:6px;padding:10px 16px;font-size:15px;font-weight:700;color:#7a7264;background:none;border:none;text-decoration:underline;cursor:pointer;}
+.shishoku-more{margin-top:2px;}
+.shishoku-more summary{min-height:48px;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#2e7d32;cursor:pointer;list-style:none;text-decoration:underline;}
+.shishoku-more summary::-webkit-details-marker{display:none;}
     .shishoku-recipe-btn:active{opacity:.85;}
     .shishoku-note{font-size:14px;line-height:1.6;color:#607d8b;margin:12px 0 0;}
   </style>
@@ -3101,8 +3104,11 @@
     <p class="shishoku-name" id="shishokuName">よみこみ中…</p>
     <button type="button" class="shishoku-swap-btn" id="shishokuSwapBtn">🔀 別の食材も見る</button>
     <p class="shishoku-text" id="shishokuPoint"></p>
-    <p class="shishoku-text" id="shishokuNutrition"></p>
-    <p class="shishoku-text" id="shishokuRecipe"></p>
+    <details class="shishoku-more">
+      <summary>🥗 栄養メモと、簡単な一品も見る</summary>
+      <p class="shishoku-text" id="shishokuNutrition"></p>
+      <p class="shishoku-text" id="shishokuRecipe"></p>
+    </details>
     <p class="shishoku-voice" id="shishokuVoice"></p>
     <button type="button" class="shishoku-btn" id="shishokuBtn">今日はこれにする</button>
     <button type="button" class="shishoku-recipe-btn" id="shishokuRecipeBtn">🍳 レシピを見る</button>
@@ -3347,6 +3353,7 @@
 .inyo-sites summary{list-style:none;cursor:pointer;min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#7fb069;color:#fff;font-size:17px;font-weight:900;}
 .inyo-sites summary::-webkit-details-marker{display:none;}
 .inyo-sites .isl-arrow{font-size:15px;transition:transform .2s;}
+.isl-names{display:block;font-size:12px;font-weight:700;opacity:.92;margin-top:2px;}
 .inyo-sites[open ] .isl-arrow{transform:rotate(180deg);}
 .inyo-sites-body{padding:10px;display:flex;flex-direction:column;gap:8px;}
 .inyo-site-link{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 14px;background:#fff;border:1.5px solid #cfe3c2;border-radius:12px;text-decoration:none;}
@@ -3596,7 +3603,7 @@
       </div>
       <p class="dict3-note">この辞典の区分は、マクロビオティックの考え方では、という目安です。<br>流派によって少しずつ違うことがあります。</p>
       <details class="inyo-sites">
-        <summary>ほかのサイトも、見てみる🐼<span class="isl-arrow">▾</span></summary>
+        <summary><span><span class="isl-main">ほかのサイトも、見てみる🐼</span><span class="isl-names">🌳森 📰ほっとニュース 🔗たけちゃんリンク</span></span><span class="isl-arrow">▾</span></summary>
         <div class="inyo-sites-body">
           <a class="inyo-site-link" href="https://mizujoshinomori.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">🌳 集まれ水女子の森</span><br><span class="isl-sub">静かな森で、ひと休み</span></span><span class="isl-go">→</span></a>
           <a class="inyo-site-link" href="https://hotto-news.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">📰 森のほっとニュース</span><br><span class="isl-sub">毎日の、ほっとするニュース</span></span><span class="isl-go">→</span></a>
@@ -3970,6 +3977,15 @@
 
   <!-- ▼ 本日のわくわくコーナー タイトル（カード外） -->
       <h2 id="wakuwakuTitle" style="font-size:1.5rem;color:#e02020;animation:diaryInnerNewPulse 1.2s ease-in-out infinite;text-align:center;margin-bottom:10px;font-weight:900;letter-spacing:0.03em;" data-ja="🎉 本日のわくわくコーナー ✨" data-en="🎉 Today's Fun Corner ✨">🎉 本日のわくわくコーナー ✨</h2>
+
+      <!-- ▼ わくわくコーナー：クイズ入口（表に出す） -->
+      <div class="card reveal" style="margin-bottom:14px;">
+        <p style="text-align:center;font-weight:900;font-size:1.05rem;color:#33691e;margin:2px 0 10px;">クイズに挑戦してみる？🐼</p>
+        <div style="display:flex;gap:10px;">
+          <button type="button" onclick="openChosaQuiz();" style="flex:1;min-height:52px;padding:12px 8px;font-size:1rem;font-weight:800;color:#2e7d32;background:#fff;border:2px solid #2e7d32;border-radius:999px;cursor:pointer;">🌍 地球クイズ</button>
+          <button type="button" onclick="openQuizOverlay();" style="flex:1;min-height:52px;padding:12px 8px;font-size:1rem;font-weight:800;color:#2e7d32;background:#fff;border:2px solid #2e7d32;border-radius:999px;cursor:pointer;">📡 宇宙クイズ</button>
+        </div>
+      </div>
 
       <!-- ▼ わくわくコーナー：地球日記 -->
       <div class="card reveal" id="pickupDiaryCard" style="margin-bottom:14px;border-color:rgba(220,140,170,0.4);background:rgba(255,245,248,0.85);">
@@ -4802,7 +4818,7 @@ document.getElementById('pwaOverlay').addEventListener('click', function(e) {
 <!-- ほかのサイトへのリンク（食の陰陽辞典ポップアップ内と同じアコーディオン） -->
 <div style="max-width:720px;width:100%;margin:10px auto 0;padding:0 20px;">
   <details class="inyo-sites">
-    <summary>ほかのサイトも、見てみる🐼<span class="isl-arrow">▾</span></summary>
+    <summary><span><span class="isl-main">ほかのサイトも、見てみる🐼</span><span class="isl-names">🌳森 📰ほっとニュース 🔗たけちゃんリンク</span></span><span class="isl-arrow">▾</span></summary>
     <div class="inyo-sites-body">
       <a class="inyo-site-link" href="https://mizujoshinomori.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">🌳 集まれ水女子の森</span><br><span class="isl-sub">静かな森で、ひと休み</span></span><span class="isl-go">→</span></a>
       <a class="inyo-site-link" href="https://hotto-news.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">📰 森のほっとニュース</span><br><span class="isl-sub">毎日の、ほっとするニュース</span></span><span class="isl-go">→</span></a>
