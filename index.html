@@ -3040,6 +3040,80 @@
 
 </head>
 <body>
+<audio id="bgmPlayer" loop preload="auto" style="display:none"></audio>
+<script>
+(function(){
+  const player = document.getElementById('bgmPlayer');
+  let playing = false; // 初期はOFF
+
+  function getBgmSrc() {
+    const now  = new Date();
+    const hour = now.getHours();
+    const day  = now.getDate();
+    let slot;
+    if (hour >= 5 && hour < 12)       slot = 'Morning';
+    else if (hour >= 12 && hour < 21) slot = 'Day';
+    else                               slot = 'Night';
+    const set = (day % 2 === 0) ? '1' : '2';
+    return slot + set + '.mp3';
+  }
+
+  function updateBtn() {
+    const icon = document.getElementById('bgmIcon');
+    if (icon) icon.style.color = playing ? '#ffb347' : '#ffb34755';
+  }
+
+  window.toggleBgm = function() {
+    playing = !playing;
+    if (playing) {
+      const src = getBgmSrc();
+      if (!player.src.endsWith(src)) player.src = src;
+      player.volume = 0.4;
+      player.play().catch(() => { playing = false; updateBtn(); });
+    } else {
+      player.pause();
+    }
+    updateBtn();
+  };
+
+  // 1分ごとに時間帯チェック
+  setInterval(() => {
+    if (!playing) return;
+    const src = getBgmSrc();
+    if (!player.src.endsWith(src)) {
+      player.src = src;
+      player.volume = 0.4;
+      player.play().catch(() => {});
+    }
+  }, 60 * 1000);
+
+  updateBtn(); // 初期表示：うすい色
+
+  // ── どんな場合（通常ブラウザ／ホーム画面PWA／Google Play版TWA）でもBGMをデフォルトONにする ──
+  const src = getBgmSrc();
+  player.src = src;
+  player.volume = 0.4;
+  player.play().then(() => {
+    playing = true;
+    updateBtn();
+  }).catch(() => {
+    // 自動再生がブロックされた場合：ユーザーが最初にタップした瞬間にONにする
+    const startOnFirstTap = () => {
+      if (playing) return; // 既にONならスキップ
+      playing = true;
+      const src2 = getBgmSrc();
+      if (!player.src.endsWith(src2)) player.src = src2;
+      player.volume = 0.4;
+      player.play().catch(() => { playing = false; updateBtn(); });
+      updateBtn();
+    };
+    document.addEventListener('pointerdown', startOnFirstTap, { once: true, passive: true });
+    document.addEventListener('touchstart', startOnFirstTap, { once: true, passive: true });
+    document.addEventListener('click', startOnFirstTap, { once: true, passive: true });
+  });
+})();
+</script>
+
 
 <!-- (BGM button & Language Switcher moved to end of body for guaranteed top stacking) -->
 
@@ -12772,80 +12846,6 @@ const OMP_FOOD_LIST = [
 
 
 
-
-<audio id="bgmPlayer" loop preload="none" style="display:none"></audio>
-<script>
-(function(){
-  const player = document.getElementById('bgmPlayer');
-  let playing = false; // 初期はOFF
-
-  function getBgmSrc() {
-    const now  = new Date();
-    const hour = now.getHours();
-    const day  = now.getDate();
-    let slot;
-    if (hour >= 5 && hour < 12)       slot = 'Morning';
-    else if (hour >= 12 && hour < 21) slot = 'Day';
-    else                               slot = 'Night';
-    const set = (day % 2 === 0) ? '1' : '2';
-    return slot + set + '.mp3';
-  }
-
-  function updateBtn() {
-    const icon = document.getElementById('bgmIcon');
-    if (icon) icon.style.color = playing ? '#ffb347' : '#ffb34755';
-  }
-
-  window.toggleBgm = function() {
-    playing = !playing;
-    if (playing) {
-      const src = getBgmSrc();
-      if (!player.src.endsWith(src)) player.src = src;
-      player.volume = 0.4;
-      player.play().catch(() => { playing = false; updateBtn(); });
-    } else {
-      player.pause();
-    }
-    updateBtn();
-  };
-
-  // 1分ごとに時間帯チェック
-  setInterval(() => {
-    if (!playing) return;
-    const src = getBgmSrc();
-    if (!player.src.endsWith(src)) {
-      player.src = src;
-      player.volume = 0.4;
-      player.play().catch(() => {});
-    }
-  }, 60 * 1000);
-
-  updateBtn(); // 初期表示：うすい色
-
-  // ── どんな場合（通常ブラウザ／ホーム画面PWA／Google Play版TWA）でもBGMをデフォルトONにする ──
-  const src = getBgmSrc();
-  player.src = src;
-  player.volume = 0.4;
-  player.play().then(() => {
-    playing = true;
-    updateBtn();
-  }).catch(() => {
-    // 自動再生がブロックされた場合：ユーザーが最初にタップした瞬間にONにする
-    const startOnFirstTap = () => {
-      if (playing) return; // 既にONならスキップ
-      playing = true;
-      const src2 = getBgmSrc();
-      if (!player.src.endsWith(src2)) player.src = src2;
-      player.volume = 0.4;
-      player.play().catch(() => { playing = false; updateBtn(); });
-      updateBtn();
-    };
-    document.addEventListener('pointerdown', startOnFirstTap, { once: true, passive: true });
-    document.addEventListener('touchstart', startOnFirstTap, { once: true, passive: true });
-    document.addEventListener('click', startOnFirstTap, { once: true, passive: true });
-  });
-})();
-</script>
 
 <!-- ===== 宇宙クイズ オーバーレイ ===== -->
 <style>
