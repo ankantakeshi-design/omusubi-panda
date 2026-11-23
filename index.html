@@ -3332,6 +3332,16 @@
 .inyo-mori-lead{font-size:13px;color:#8a6d4f;margin:0 0 8px;}
 .inyo-mori-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;}
 .inyo-mori-link{display:inline-flex;align-items:center;min-height:48px;padding:8px 16px;border-radius:999px;background:#eef6ee;border:1.5px solid #bcd8bc;color:#3c6e47;font-size:14px;font-weight:700;text-decoration:none;}
+.inyo-sites{margin:18px 0 6px;border:2px solid #7fb069;border-radius:16px;background:#f4faf0;overflow:hidden;text-align:left;}
+.inyo-sites summary{list-style:none;cursor:pointer;min-height:52px;display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#7fb069;color:#fff;font-size:17px;font-weight:900;}
+.inyo-sites summary::-webkit-details-marker{display:none;}
+.inyo-sites .isl-arrow{font-size:15px;transition:transform .2s;}
+.inyo-sites[open ] .isl-arrow{transform:rotate(180deg);}
+.inyo-sites-body{padding:10px;display:flex;flex-direction:column;gap:8px;}
+.inyo-site-link{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 14px;background:#fff;border:1.5px solid #cfe3c2;border-radius:12px;text-decoration:none;}
+.isl-name{font-size:16px;font-weight:800;color:#33691e;}
+.isl-sub{font-size:13px;color:#7a7264;}
+.isl-go{margin-left:auto;font-size:18px;color:#7fb069;font-weight:900;}
     .inyo-core{background:#fff8e1;border:2px solid #e0a458;border-radius:16px;padding:14px 16px;text-align:center;margin:12px 0;}
     .inyo-core .big{font-size:18px;font-weight:900;color:#5d4037;line-height:1.9;}
     .inyo-core .small{font-size:14px;color:#6d4c41;margin-top:4px;}
@@ -3574,6 +3584,14 @@
         </div>
       </div>
       <p class="dict3-note">この辞典の区分は、マクロビオティックの考え方では、という目安です。<br>流派によって少しずつ違うことがあります。</p>
+      <details class="inyo-sites">
+        <summary>ほかのサイトも、見てみる🐼<span class="isl-arrow">▾</span></summary>
+        <div class="inyo-sites-body">
+          <a class="inyo-site-link" href="https://mizujoshinomori.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">🌳 集まれ水女子の森</span><br><span class="isl-sub">静かな森で、ひと休み</span></span><span class="isl-go">→</span></a>
+          <a class="inyo-site-link" href="https://hotto-news.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">📰 森のほっとニュース</span><br><span class="isl-sub">毎日の、ほっとするニュース</span></span><span class="isl-go">→</span></a>
+          <a class="inyo-site-link" href="https://takechanlink.pages.dev/" target="_blank" rel="noopener"><span><span class="isl-name">🔗 たけちゃんリンク</span><br><span class="isl-sub">たけちゃんの窓口まとめ</span></span><span class="isl-go">→</span></a>
+        </div>
+      </details>
       <button type="button" class="dict3-close" data-dict3-close>閉じる</button>
     </div>
   </div>
