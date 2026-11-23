@@ -3354,6 +3354,7 @@
 .inyo-sites summary::-webkit-details-marker{display:none;}
 .inyo-sites .isl-arrow{font-size:15px;transition:transform .2s;}
 .isl-names{display:block;font-size:12px;font-weight:700;opacity:.92;margin-top:2px;}
+.fold-toggle{display:block;width:100%;min-height:48px;margin:0 0 4px;padding:10px;font-size:0.95rem;font-weight:800;color:#5a7263;background:rgba(255,255,255,0.6);border:1.5px dashed rgba(120,150,130,0.55);border-radius:12px;cursor:pointer;}
 .inyo-sites[open ] .isl-arrow{transform:rotate(180deg);}
 .inyo-sites-body{padding:10px;display:flex;flex-direction:column;gap:8px;}
 .inyo-site-link{display:flex;align-items:center;gap:10px;min-height:56px;padding:10px 14px;background:#fff;border:1.5px solid #cfe3c2;border-radius:12px;text-decoration:none;}
@@ -3992,6 +3993,8 @@
         <div class="section-header" style="margin-bottom:10px;">
           <h2 id="wakuwakuDiaryTitle" class="section-title" style="font-size:1.5rem;" data-ja="NEW 📖地球日記🌍" data-en="NEW 📖 Earth Diary 🌍"><span id="wakuwakuDiaryNewBadge" style="color:#e02020;animation:diaryInnerNewPulse 1.2s ease-in-out infinite;font-weight:900;display:inline-block;">NEW</span> <span style="color:#e87fa8;">📖地球日記🌍</span></h2>
         </div>
+        <button type="button" class="fold-toggle" onclick="toggleFold(this)">ひらく ▾</button>
+        <div class="fold-body" style="display:none">
         <div style="text-align:center;margin-bottom:10px;">
           <img id="pickupDiaryIllust" src="Diary.webp" alt="地球日記" onclick="onIllustTap('pickupDiaryIllust','diary')" class="pickup-illust" style="width:100px;height:auto;border-radius:10px;filter:drop-shadow(0 2px 6px rgba(220,140,170,0.2));cursor:pointer;">
         </div>
@@ -4018,12 +4021,15 @@
           " data-ja="🔗 シェア" data-en="🔗 Share">🔗 シェア</button>
         </div>
       </div>
+      </div>
 
       <!-- ▼ 地球＆宇宙スタディ ランダムピックアップ -->
       <div class="card reveal" id="pickupStudyCard" style="margin-bottom:14px;border-color:rgba(120,170,230,0.4);background:rgba(240,246,255,0.85);">
         <div class="section-header" style="margin-bottom:10px;">
           <h2 id="wakuwakuStudyTitle" class="section-title" style="font-size:1.3rem;" data-ja="地球＆宇宙スタディ ✏" data-en="Earth & Space Study ✏"><span id="wakuwakuStudyNewBadge" style="color:#e02020;animation:diaryInnerNewPulse 1.2s ease-in-out infinite;font-weight:900;display:inline-block;">PickUp</span> 📖地球＆宇宙スタディ ✏</h2>
         </div>
+        <button type="button" class="fold-toggle" onclick="toggleFold(this)">ひらく ▾</button>
+        <div class="fold-body" style="display:none">
         <div style="font-size:0.78rem;color:#6a90c0;font-weight:700;margin-bottom:8px;" id="pickupStudyMeta"></div>
         <div style="text-align:center;margin-bottom:10px;">
           <img id="pickupStudyImg" src="Nature.webp" alt="" onclick="onIllustTap('pickupStudyImg','snews')" class="pickup-illust" style="width:100px;height:auto;border-radius:10px;filter:drop-shadow(0 2px 6px rgba(60,120,200,0.2));cursor:pointer;">
@@ -4058,12 +4064,15 @@
           " data-ja="🔗 シェア" data-en="🔗 Share">🔗 シェア</button>
         </div>
       </div>
+      </div>
 
       <!-- ▼ 最新宇宙NEWS ピックアップ -->
       <div class="card reveal" id="pickupSnewsCard" style="margin-bottom:14px;border-color:rgba(160,135,210,0.4);background:rgba(245,240,255,0.85);">
         <div class="section-header" style="margin-bottom:10px;">
           <h2 class="section-title" style="font-size:1.3rem;" data-ja="NEW 📺宇宙NEWS👽" data-en="NEW 📺Space NEWS👽"><span style="color:#e02020;animation:diaryInnerNewPulse 1.2s ease-in-out infinite;font-weight:900;display:inline-block;">NEW</span> <span style="color:#6a4a9a;">📺最新宇宙NEWS👽</span></h2>
         </div>
+        <button type="button" class="fold-toggle" onclick="toggleFold(this)">ひらく ▾</button>
+        <div class="fold-body" style="display:none">
         <div style="text-align:center;margin-bottom:10px;">
           <img id="pickupSnewsIllust" src="News.webp" alt="宇宙NEWS" onclick="onIllustTap('pickupSnewsIllust','snews')" class="pickup-illust" style="width:100px;height:auto;border-radius:10px;filter:drop-shadow(0 2px 6px rgba(120,90,190,0.2));cursor:pointer;">
         </div>
@@ -4826,6 +4835,16 @@ document.getElementById('pwaOverlay').addEventListener('click', function(e) {
     </div>
   </details>
 </div>
+
+<script>
+function toggleFold(btn){
+  var body = btn.nextElementSibling;
+  if(!body || !body.classList.contains('fold-body')) return;
+  var open = body.style.display !== 'none';
+  body.style.display = open ? 'none' : '';
+  btn.textContent = open ? 'ひらく ▾' : 'とじる ▴';
+}
+</script>
 
 <!-- FAQ セクション（AI検索向け・薄く目立たないデザイン） -->
 <section id="faq" aria-label="よくある質問" style="max-width:720px;width:100%;margin-inline:auto;padding:0 20px 60px;opacity:0.65;">
@@ -15985,6 +16004,7 @@ window.addEventListener('resize', buildGround);
     </div>
   </div>
 </div>
+      </div>
 
 <!-- ハッシュルーティング（各オーバーレイに固有URL） -->
 <script>
