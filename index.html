@@ -3077,6 +3077,7 @@
     .shishoku-btn:active{opacity:.85;}
     .shishoku-btn.decided{background:#558b2f;}
     .shishoku-recipe-btn{display:block;width:100%;min-height:52px;margin-top:10px;padding:14px 16px;font-size:17px;font-weight:800;color:#2e7d32;background:#ffffff;border:2px solid #2e7d32;border-radius:999px;cursor:pointer;}
+.shishoku-swap-btn{display:block;width:100%;min-height:48px;margin-top:6px;padding:10px 16px;font-size:15px;font-weight:700;color:#7a7264;background:none;border:none;text-decoration:underline;cursor:pointer;}
     .shishoku-recipe-btn:active{opacity:.85;}
     .shishoku-note{font-size:14px;line-height:1.6;color:#607d8b;margin:12px 0 0;}
   </style>
@@ -3104,6 +3105,7 @@
     <p class="shishoku-voice" id="shishokuVoice"></p>
     <button type="button" class="shishoku-btn" id="shishokuBtn">今日はこれにする</button>
     <button type="button" class="shishoku-recipe-btn" id="shishokuRecipeBtn">🍳 レシピを見る</button>
+    <button type="button" class="shishoku-swap-btn" id="shishokuSwapBtn">🔀 別の食材も見る</button>
     <p class="shishoku-note">明日の試食とレシピも、お楽しみに🐼</p>
     <p class="shishoku-note">🌏 季節は、地球が少し傾いたまま、太陽のまわりを回っているから生まれるんだって。</p>
   </section>
@@ -3248,38 +3250,47 @@
     var now = new Date();
     var monthItems = DATA[String(now.getMonth()+1)] || [];
     if(!monthItems.length) return;
-    var idx = dayOfYear(now) % monthItems.length;
-    var item = monthItems[idx];
+    var todayIdx = dayOfYear(now) % monthItems.length;
+    var cur = todayIdx;
     var nameEl=document.getElementById('shishokuName');
     var pointEl=document.getElementById('shishokuPoint');
     var recipeEl=document.getElementById('shishokuRecipe');
     var voiceEl=document.getElementById('shishokuVoice');
     var btn=document.getElementById('shishokuBtn');
     if(!nameEl||!btn) return;
-    nameEl.textContent = '旬の試食は「' + item[0] + '」';
-    pointEl.innerHTML = '';
-    var b1=document.createElement('b'); b1.textContent='ひとくちメモ：';
-    pointEl.appendChild(b1); pointEl.appendChild(document.createTextNode(item[1]));
-    var nutEl=document.getElementById('shishokuNutrition');
-    if(nutEl){ nutEl.innerHTML=''; var nutTxt=(window.OMUPAN_NUTRITION||{})[item[0]]; if(nutTxt){ var b3=document.createElement('b'); b3.textContent='栄養メモ：'; nutEl.appendChild(b3); nutEl.appendChild(document.createTextNode(nutTxt)); } }
-    recipeEl.innerHTML='';
-    var b2=document.createElement('b'); b2.textContent='簡単な一品：';
-    recipeEl.appendChild(b2); recipeEl.appendChild(document.createTextNode(item[2]));
-      var recT=(window.OMUPAN_RECIPES||{})[item[0]];
-      if(recT){ recipeEl.appendChild(document.createElement('br')); var rbT=document.createElement('b'); rbT.textContent='おすすめ料理：'; recipeEl.appendChild(rbT); recipeEl.appendChild(document.createTextNode('「'+recT.dish+'」')); }
     voiceEl.textContent = VOICES[dayOfYear(now) % VOICES.length];
     var key = 'omupan-shishoku-' + now.getFullYear() + '-' + (now.getMonth()+1) + '-' + now.getDate();
-    function showDecided(){
-      btn.textContent = '今日は「' + item[0] + '」にきめた！🍙';
-      btn.classList.add('decided');
+    function isDecided(){ try{ return localStorage.getItem(key)==='1'; }catch(e){ return false; } }
+    function render(){
+      var item = monthItems[cur];
+      nameEl.textContent = '旬の試食は「' + item[0] + '」';
+      pointEl.innerHTML = '';
+      var b1=document.createElement('b'); b1.textContent='ひとくちメモ：';
+      pointEl.appendChild(b1); pointEl.appendChild(document.createTextNode(item[1]));
+      var nutEl=document.getElementById('shishokuNutrition');
+      if(nutEl){ nutEl.innerHTML=''; var nutTxt=(window.OMUPAN_NUTRITION||{})[item[0]]; if(nutTxt){ var b3=document.createElement('b'); b3.textContent='栄養メモ：'; nutEl.appendChild(b3); nutEl.appendChild(document.createTextNode(nutTxt)); } }
+      recipeEl.innerHTML='';
+      var b2=document.createElement('b'); b2.textContent='簡単な一品：';
+      recipeEl.appendChild(b2); recipeEl.appendChild(document.createTextNode(item[2]));
+      var recT=(window.OMUPAN_RECIPES||{})[item[0]];
+      if(recT){ recipeEl.appendChild(document.createElement('br')); var rbT=document.createElement('b'); rbT.textContent='おすすめ料理：'; recipeEl.appendChild(rbT); recipeEl.appendChild(document.createTextNode('「'+recT.dish+'」')); }
+      if(isDecided()){
+        btn.textContent = '今日は「' + item[0] + '」にきめた！🍙';
+        btn.classList.add('decided');
+      } else {
+        btn.textContent = '今日はこれにする';
+        btn.classList.remove('decided');
+      }
     }
-    try{ if(localStorage.getItem(key)==='1') showDecided(); }catch(e){}
+    render();
     btn.addEventListener('click', function(){
       try{ localStorage.setItem(key,'1'); }catch(e){}
-      showDecided();
+      render();
     });
     var rbtn=document.getElementById('shishokuRecipeBtn');
-    if(rbtn){ rbtn.addEventListener('click', function(){ if(window.openOmupanRecipe) openOmupanRecipe(item[0]); }); }
+    if(rbtn){ rbtn.addEventListener('click', function(){ if(window.openOmupanRecipe) openOmupanRecipe(monthItems[cur][0]); }); }
+    var sbtn=document.getElementById('shishokuSwapBtn');
+    if(sbtn){ sbtn.addEventListener('click', function(){ cur = (cur + 1) % monthItems.length; render(); }); }
   })();
   </script>
   <!-- ▲▲ 今日の試食 ここまで ▲▲ -->
